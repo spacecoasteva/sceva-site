@@ -1,4 +1,4 @@
-# Wicked Garden Gnomes Website
+# Space Coast EVA Website
 
 This is the project for the [Wicked Garden Gnomes
 website](https://www.wickedgardengnomes.com), which is hosted on Google's
