@@ -4,7 +4,7 @@
 <title>Space Coast Electric Vehicle Association</title>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link rel="manifest" href="/ site.manifest"/>
+<!--<link rel="manifest" href="/ site.manifest"/>
 <link rel="apple-touch-icon" sizes="57x57" type="image/png" href="/img/gnome_logo57.png"/>
 <link rel="apple-touch-icon" sizes="76x76" type="image/png" href="/img/gnome_logo76.png"/>
 <link rel="apple-touch-icon" sizes="120x120" type="image/png" href="/img/gnome_logo120.png"/>
@@ -15,33 +15,34 @@
 <link rel="icon" sizes="128x128" type="image/png" href="/img/gnome_logo128.png"/>
 <link rel="icon" sizes="96x96" type="image/png" href="/img/gnome_logo96.png"/>
 <link rel="icon" sizes="32x32" type="image/png" href="/img/gnome_logo32.png"/>
-<link rel="icon" sizes="16x16" type="image/png" href="/img/gnome_logo16.png"/>
+<link rel="icon" sizes="16x16" type="image/png" href="/img/gnome_logo16.png"/>-->
 <link rel="stylesheet" href="css/site.css"/>
 <script type="text/javascript" src="js/site.js"></script>
 </head>
 <body>
     <div class="content">
         <p class="banner band"><span>Space&#160;Coast&#160;Electric&#160;Vehicle&#160;Association</span></p>
-        <p class="ticker" id="next_show"><span class="placeholder">Our next meeting coming soon!</span><span class="next_info"><span id="next_info"></span><a href="" target="_blank" title="Add this event to your Google Calendar"><img src="img/logo-plus.png"></a></span></p>
+        <p class="ticker" id="next_event"><span class="placeholder">Our next event is coming soon!</span><span class="next_info"><span id="next_info"></span><a href="" target="_blank" title="Add this event to your Google Calendar"><img src="img/logo-plus.png"></a></span></p>
         <a href="img/gnome_logo.png"><img class="logo" src="img/gnome_logo_sm.png" alt="" title="Wicked Garden Gnomes"/></a></p>
-        
+
         <h2 align="center">About Space Coast Electric Vehicle Association</h2>
         <p>The Space Coast EVA Chapter is a group of enthusiasts in the Brevard County, FL area 
             who enjoy sharing information and learning more about electric vehicles.</p>
         <p class="contact"><a href="mailto:spacecoasteva@gmail.com">spacecoasteva@gmail.com</a></p>
-        
+
         <p class="members">Board Members</p>
         <p class="member"><span>Will Smith</span> President</p>
         <p class="member"><span>Bob Hathaway</span> Vice President</p>
         <p class="member"><span>Bill Bowden</span> Treasurer</p>
         <p class="member"><span>Phil Stasik</span> Secretary</p>
-        
-        <p>Membership to our local chapter is gained through signing up on the 
-        National EVA website.</p> 
-        
+
+        <p>Become a member of our local chapter by signing up on the 
+        National EVA website.</p>
+
         <p align="center"><a href="https://www.myeva.org/memberships">Click to Join</a></p>
 
-        <p class="banner"><span>Meetings/Events</span></p>
+        <p class="banner"><span>Meetings and Events</span></p>
+        <h3 align="center">Upcoming</h3>
         <table style="width: 100%; border-spacing: 0;">
             <tbody id="events"></tbody>
             <tfoot>
@@ -54,7 +55,7 @@
                                     <span class="logo-plus-button-lockup-text">Calendar</span>
                                 </div>
                             </div>
-                            <form action="https://calendar.google.com/calendar/u/0/render?cid=vt6m1geim5tivevgktlil4dhds%40group.calendar.google.com" target="_blank">
+                            <form action="https://calendar.google.com/calendar/u/0/render?cid=6d94a4fc92555fbdd3a2541300bfa9ce8a55621d1cd9feafd12aeb18fc489e90@group.calendar.google.com" target="_blank">
                                 <button class="subscribeButton" type="submit" title="Show SCEVA meetings/events in your Google Calendar"></button>
                             </form>
                         </div>
@@ -64,6 +65,10 @@
                     </td>
                 </tr>
             </tfoot>
+        </table>
+        <h3 align="center">Previous</h3>
+        <table style="width: 100%; border-spacing: 0;">
+            <tbody id="prev-events"></tbody>
         </table>
         <hr/>
     </div>
