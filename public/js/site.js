@@ -40,20 +40,19 @@ function loadEvents() {
             date = '<td class="event-date" title="' + start.toDateString() + '">' + date + '<span class="short">' + (start.getMonth() + 1) + '/' + start.getDate() + '</span></td>';
             var time = start.toLocaleTimeString() + '&nbsp;- ' + end.toLocaleTimeString();
             time = '<td class="event-time">' + time.replace(/:\d\d /g, ' ').replace(/ ([AaPp])([Mm])/g, '<span class="long">&nbsp;$1$2</span><span class="short">$1</span>') + '</td>';
-            var summary = e.summary.replace(/^ *wgg *(sc)? *(at *|([^@]))/i, 'WGG $1 @ $3')
-                                   .replace(/\bSC\b/i, 'feat. Steve Cohen');
-            var text = e.location || e.description || summary;
-            text = '<td class="event-text" title="' + text + '"><span></span>' + summary + '</td>';
+            var desc = e.description ? e.description.replace(/ *{[^}]*}/, '') : '';
+            var text = e.location || desc || e.summary;
+            text = '<td class="event-text" title="' + text + '"><span></span>' + e.summary + '</td>';
             var dateFormat = function(d) { return d.toISOString().replace(/-|:|\.\d+/g, ''); }
-            var add = ADD_URL + '&text=' + encodeURIComponent(summary) + '&dates=' +
+            var add = ADD_URL + '&text=' + encodeURIComponent(e.summary) + '&dates=' +
                 [start, end].map(dateFormat).join('/') +
-                (e.description ? '&details=' + encodeURIComponent(e.description) : '') +
+                (desc ? '&details=' + encodeURIComponent(desc) : '') +
                 (e.location ? '&location=' + encodeURIComponent(e.location) : '');
             link = '<td class="event-link" title="Add this event to your Google Calendar"><a href="' + add + '" target="_blank"><img src="img/logo-plus.png"></a></td>';
-            var rule = e.description && e.location ? '<hr/>' : '';
+            var rule = desc && e.location ? '<hr/>' : '';
             var maptag = '<a title="Wicked Map!" target="_blank" href="' + MAP_URL + encodeURIComponent(e.location) + '">';
             var detailLoc = e.location ? (e.location.match(/\btb[da]\b/i) ? e.location : maptag + e.location + '</a>') : '';
-            var detail = (e.description || '') + rule + detailLoc;
+            var detail = (desc || '') + rule + detailLoc;
             detail = (detail ? '<tr class="event-detail"><td colspan="4"><div>' + detail + '</div></td></tr>' : '');
             newRow = '<tr class="event summary">' + date + time + text + link + '</tr>' + detail;
             if (start < now) {
@@ -71,13 +70,17 @@ function loadEvents() {
                 function pickOne(array) { return array[Math.floor(Math.random() * array.length)]; }
                 function dateSfx(d) {return['st','nd','rd'][((d.getDate()+90)%100-10)%10-1]||'th';}
                 function sumVenue(s) { return s.indexOf('@') < 0 ? '... ' + s : ' at ' + s.split('@')[1].trim(); }
+                var locOverride = e.description ? e.description.match(/ *{([^@}]*)@([^}]*)}/) : [];
+                var notTBD = e.location && !e.location.match(/\btb[da]\b/i);
+                var venSub = locOverride && locOverride[1] ? (notTBD ? maptag + locOverride[1] + '</a>' : locOverride[1])
+                                                           : (notTBD ? maptag + e.location.match(/[^,]*/)[0] + '</a>' : 'TBD');
+                var citySub = locOverride && locOverride[2] ? locOverride[2] : (notTBD ? e.location.match(/, *([^,]*), *FL/)[1] : 'TBD');
                 var date = pickOne(whens)
                         .replace('$d', start.toLocaleDateString('en-US', dateOpts) + dateSfx(start))
                         .replace('$w', start.toLocaleDateString('en-US', { 'weekday': 'short' }))
                         .replace('$W', start.toLocaleDateString('en-US', { 'weekday': 'long' }));
-                var venue = (!e.location ? sumVenue(summary) : (pickOne(wheres)
-                        .replace('$v', maptag + e.location.match(/[^,]*/)[0] + '</a>')
-                        .replace('$c', e.location.match(/, *([^,]*), *FL/)[1])));
+                var venue = (!e.location ? sumVenue(e.summary) : (pickOne(wheres)
+                        .replace('$v', venSub).replace('$c', citySub)));
                 next_info = document.getElementById('next_info');
                 next_info.innerHTML = (pickOne(intros) + pickOne(wherewhens) + pickOne(whattimes))
                         .replace('$d', date).replace('$v', venue)
