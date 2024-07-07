@@ -9,14 +9,14 @@ body { color: #FFFFFF; background-color: #01073f; background-origin: content-box
     body { background-image: url(../img/spacex-timelapselaunch.jpg); } }
 p.banner { display: flex; clear: both; margin: 10px 0 0 0;
            text-align: center; font-size: 1.4em; }
-p.banner span { display: inline-flex; background: #ec2323; border-radius: 0.5em;
-                padding: 0.15em 0; text-wrap: nowrap; min-width: 0; }
+p.banner span { display: inline-flex; background: #333366; border-radius: 0.5em;
+                padding: 0.15em 0; min-width: 0; }
 p.banner:before, p.banner:after { flex-grow: 1; content: ""; }
 p.banner span:before, p.banner span:after { width: 1em; min-width: 0.2em; content: ""; }
 p.ticker { display: flex; clear: both; margin: 10px 0 0 0;
            text-align: center; font-size: 1.1em; }
-p.ticker > span { display: inline-flex; background: #63f331; border-radius: 0.5em;
-                  color: #000000; padding: 0.15em 0; min-width: 0; max-width: 20em; }
+p.ticker > span { display: inline-flex; background: #FFFFFF; border-radius: 0.5em;
+                  color: #000000; font-weight: bold; padding: 0.15em 0; min-width: 0; max-width: 20em; }
 p.ticker > span.next_info { display: none; }
 p.ticker.live > span.placeholder { display: none; }
 p.ticker.live > span.next_info { display: inline-flex; position: relative; }
@@ -29,14 +29,14 @@ p.ticker > span:before, p.ticker > span:after { width: 0.5em; min-width: 0.3em; 
 @media (min-width: 23em) { p.band { font-size: 2.0em; } }
 
 img { margin-top: 10px; }
-img.logo { margin: 10px 10px 2px 0; border: 0; float: left; width: 150px; }
+img.logo { width: 80%; max-width: 600px; height: auto; }
 p.contact { clear: right; float: right; text-align: right; margin: 0 0 0 15px; }
 p.contact img { margin-top: 3px; }
 @media (max-width: 28em) { p.contact span { display: none; } }
-p.members { margin-bottom: 0; padding-top: 8px; font-weight: bold; color: #63F331; }
-p.member { margin: 6px 0 3px 10em; color: #63F331; text-indent: -9.5em; }
+p.members { margin-bottom: 0; padding-top: 8px; font-weight: bold; color: #3366FF; }
+p.member { margin: 6px 0 3px 10em; color: #3366FF; text-indent: -9.5em; }
 p.member ~ p.member { margin-top: 0; }
-p.member span { display: inline-block; min-width: 8em; text-indent: 0; }
+p.member span { display: inline-block; min-width: 7em; text-indent: 0; }
 
 #events td { vertical-align: top; padding-top: 0.3em; }
 .event-detail div { overflow: hidden; padding: 0; max-height: 0;
