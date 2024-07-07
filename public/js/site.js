@@ -52,7 +52,8 @@ function loadEvents() {
             link = '<td class="event-link" title="Add this event to your Google Calendar"><a href="' + add + '" target="_blank"><img src="img/logo-plus.png"></a></td>';
             var rule = e.description && e.location ? '<hr/>' : '';
             var maptag = '<a title="Wicked Map!" target="_blank" href="' + MAP_URL + encodeURIComponent(e.location) + '">';
-            var detail = (e.description || '') + rule + (e.location ? maptag + e.location + '</a>' : '');
+            var detailLoc = e.location ? (e.location.match(/\btb[da]\b/i) ? e.location : maptag + e.location + '</a>') : '';
+            var detail = (e.description || '') + rule + detailLoc;
             detail = (detail ? '<tr class="event-detail"><td colspan="4"><div>' + detail + '</div></td></tr>' : '');
             newRow = '<tr class="event summary">' + date + time + text + link + '</tr>' + detail;
             if (start < now) {
