@@ -29,7 +29,8 @@ p.ticker > span:before, p.ticker > span:after { width: 0.5em; min-width: 0.3em; 
 @media (min-width: 23em) { p.chapter { font-size: 2.0em; } }
 
 img { margin-top: 10px; }
-img.logo { width: 80%; max-width: 600px; height: auto; }
+img.logo { width: 80%; max-width: 600px; height: auto;
+           background-color: #2A3784; padding: 10px 0 0 25px }
 p.contact { clear: right; float: right; text-align: right; margin: 0 0 0 15px; }
 p.contact img { margin-top: 3px; }
 @media (max-width: 28em) { p.contact span { display: none; } }
