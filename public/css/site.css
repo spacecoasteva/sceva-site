@@ -39,6 +39,8 @@ p.member { margin: 6px 0 3px 4em; text-indent: -3.5em; }
 p.member ~ p.member { margin-top: 0; }
 p.member span { display: inline-block; min-width: 7em; text-indent: 0; }
 .centered { text-align: center; text-wrap: balance; }
+#subscribe-form { margin-bottom: 16px; }
+#subscribe-form > p { margin-bottom: 8px; }
 
 #events td { vertical-align: top; padding-top: 0.3em; }
 .event-detail div { overflow: hidden; padding: 0; max-height: 0;

@@ -17,6 +17,7 @@
 <link rel="icon" sizes="32x32" type="image/png" href="img/sceva_logo32.png"/>
 <link rel="icon" sizes="16x16" type="image/png" href="img/sceva_logo16.png"/>
 <link rel="stylesheet" href="css/site.css"/>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script type="text/javascript" src="js/site.js"></script>
 </head>
 <body>
@@ -45,12 +46,10 @@
                 src="img/eva-transparent.png" class="logo" alt="Join the Space Coast Electric Vehicle Association Chapter"/></a>
         </p>
 
-        <form>
-            <p align="center">
-            <label>To join the SCEVA mailing list, enter your email: <br>
-                <input type="text" name="email"/></label>
-                <input type="submit" name="subscribeButton" value="Subscribe" />
-            </p>
+        <form id="subscribe-form" class="centered">
+            <p>To join the SCEVA mailing list and be notified of events, enter your email address:</p>
+            <input type="text" name="email_address" id="email_address" placeholder="user@example.com"/>
+            <input type="submit" name="subscribeButton" value="Subscribe"/>
         </form>
 
         <p class="banner"><span>Meetings and Events</span></p>
