@@ -1,5 +1,5 @@
 html, body, div { margin: 0; padding: 0; box-sizing: border-box; }
-.content { padding: 0 10px; max-width: 800px; }
+.content { padding: 0 10px; max-width: 800px; margin-bottom: 80px; }
 .content a { color: #9999FF; text-decoration: none; }
 body { color: #FFFFFF; background-color: #01073f; background-origin: content-box;
        background-image: url(../img/spacex-timelapselaunch_half.jpg); cursor: pointer;
@@ -33,8 +33,8 @@ img.logo { width: 80%; max-width: 600px; height: auto; }
 p.contact { clear: right; float: right; text-align: right; margin: 0 0 0 15px; }
 p.contact img { margin-top: 3px; }
 @media (max-width: 28em) { p.contact span { display: none; } }
-p.members { margin-bottom: 0; padding-top: 8px; font-weight: bold; color: #3366FF; }
-p.member { margin: 6px 0 3px 10em; color: #3366FF; text-indent: -9.5em; }
+p.members { margin: 25px 0 0 0; }
+p.member { margin: 6px 0 3px 4em; text-indent: -3.5em; }
 p.member ~ p.member { margin-top: 0; }
 p.member span { display: inline-block; min-width: 7em; text-indent: 0; }
 
