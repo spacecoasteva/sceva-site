@@ -21,6 +21,9 @@ function loadEvents() {
     var API_KEY = '&key=AIzaSyDQQv6yLc_d3zkHDDHHH6j43N9iZzKQLEA';
     var ADD_URL = 'https://www.google.com/calendar/render?action=TEMPLATE&sf=true&output=xml&sprop=website:spacecoasteva.club';
     var MAP_URL = 'https://maps.google.com/maps?q=';
+    var lang = navigator.languages[0];
+    var etz = { timeZone: 'America/New_York' };
+    var mtz = Intl.DateTimeFormat().resolvedOptions().timeZone != etz.timeZone ? ' ET' : '';
     var min = '&timeMin=' + (new Date(Date.now() - 182 * 24 * 60 * 60 * 1000)).toISOString();
     var max = '&timeMax=' + (new Date(Date.now() + 62 * 24 * 60 * 60 * 1000)).toISOString();
     var req = new XMLHttpRequest();
@@ -38,7 +41,7 @@ function loadEvents() {
             var end = new Date(e.end.dateTime || e.end.date);
             var date = start.toDateString().replace(/(\s+)(\w+)\s*(\d+)\s*\d{3,}\s*/, '$1<span class="long">$2&nbsp;$3</span>');
             date = '<td class="event-date" title="' + start.toDateString() + '">' + date + '<span class="short">' + (start.getMonth() + 1) + '/' + start.getDate() + '</span></td>';
-            var time = start.toLocaleTimeString() + '&nbsp;- ' + end.toLocaleTimeString();
+            var time = start.toLocaleTimeString(lang, etz) + '&nbsp;- ' + end.toLocaleTimeString(lang, etz);
             time = '<td class="event-time">' + time.replace(/:\d\d /g, ' ').replace(/ ([AaPp])([Mm])/g, '<span class="long">&nbsp;$1$2</span><span class="short">$1</span>') + '</td>';
             var desc = e.description ? e.description.replace(/ *{[^}]*}/, '') : '';
             var text = e.location || desc || e.summary;
@@ -84,7 +87,7 @@ function loadEvents() {
                 next_info = document.getElementById('next_info');
                 next_info.innerHTML = (pickOne(intros) + pickOne(wherewhens) + pickOne(whattimes))
                         .replace('$d', date).replace('$v', venue)
-                        .replace('$t', start.toLocaleTimeString().replace(/(:00)?:\d+ /, '').toLowerCase());
+                        .replace('$t', start.toLocaleTimeString(lang, etz).replace(/(:00)?:\d+ /, '').toLowerCase() + mtz);
                 next_info.nextElementSibling.setAttribute("href", add);
                 document.getElementById('next_event').classList.add('live');
             }
