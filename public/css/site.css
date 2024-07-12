@@ -86,8 +86,8 @@ div.bg { color: #63F331; text-align: center; }
 div.bg img { padding: 0; width: 60vw; min-width: 90px; max-width: 600px; }
 
 ::-webkit-scrollbar { width: 10px; height: 10px; }
-::-webkit-scrollbar-track { background-color: #666666; }
-::-webkit-scrollbar-thumb { background-color: #554444; }
-::-webkit-scrollbar-thumb:hover { background-color: #664444; }
+::-webkit-scrollbar-track { background-color: #2A3784; }
+::-webkit-scrollbar-thumb { background-color: #676A73; }
+::-webkit-scrollbar-thumb:hover { background-color: #8A8E9A; }
 ::-webkit-scrollbar-button { display: none; }
-::-webkit-scrollbar-corner { background-color: #444444; }
+::-webkit-scrollbar-corner { background-color: #243073; }
