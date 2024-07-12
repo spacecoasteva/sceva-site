@@ -9,7 +9,7 @@ body { color: #FFFFFF; background-color: #01073f; background-origin: content-box
     body { background-image: url(../img/spacex-timelapselaunch.jpg); } }
 p.banner { display: flex; clear: both; margin: 10px 0 0 0;
            text-align: center; text-wrap: balance; font-size: 1.4em; }
-p.banner span { display: inline-flex; background: #333366; border-radius: 0.5em;
+p.banner span { display: inline-flex; background: #2A3784; border-radius: 0.5em;
                 padding: 0.15em 0; min-width: 0; }
 p.banner:before, p.banner:after { flex-grow: 1; content: ""; }
 p.banner span:before, p.banner span:after { width: 1em; min-width: 0.2em; content: ""; }
