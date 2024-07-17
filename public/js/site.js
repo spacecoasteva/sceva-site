@@ -51,13 +51,16 @@ function loadEvents() {
                 [start, end].map(dateFormat).join('/') +
                 (desc ? '&details=' + encodeURIComponent(desc) : '') +
                 (e.location ? '&location=' + encodeURIComponent(e.location) : '');
-            link = '<td class="event-link" title="Add this event to your Google Calendar"><a href="' + add + '" target="_blank"><img src="img/logo-plus.png"></a></td>';
+            link = '<td class="event-link" title="Add this event to your Google Calendar"><a href="' + add + '" target="_blank"><img src="img/logo-plus.png"/></a></td>';
             var rule = desc && e.location ? '<hr/>' : '';
-            var maptag = '<a title="Wicked Map!" target="_blank" href="' + MAP_URL + encodeURIComponent(e.location) + '">';
-            var detailLoc = e.location ? (e.location.match(/\btb[da]\b/i) ? e.location : maptag + e.location + '</a>') : '';
+            var maptag = '<a title="Map" target="_blank" href="' + MAP_URL + encodeURIComponent(e.location) + '">';
+            var mapendtag = '<img class="map" src="img/map.png"/></a>';
+            var isTBD = e.location.match(/\btb[da]\b/i);
+            var summaryDetails = (start < now || isTBD) ? 'summary' : 'details';
+            var detailLoc = e.location ? (isTBD ? e.location : maptag + e.location + mapendtag) : '';
             var detail = (desc || '') + rule + detailLoc;
             detail = (detail ? '<tr class="event-detail"><td colspan="4"><div>' + detail + '</div></td></tr>' : '');
-            newRow = '<tr class="event summary">' + date + time + text + link + '</tr>' + detail;
+            newRow = '<tr class="event ' + summaryDetails + '">' + date + time + text + link + '</tr>' + detail;
             if (start < now) {
                 prevRows = newRow + prevRows;
             } else {
@@ -75,8 +78,8 @@ function loadEvents() {
                 function sumVenue(s) { return s.indexOf('@') < 0 ? '... ' + s : ' at ' + s.split('@')[1].trim(); }
                 var locOverride = e.description ? e.description.match(/ *{([^@}]*)@([^}]*)}/) : [];
                 var notTBD = e.location && !e.location.match(/\btb[da]\b/i);
-                var venSub = locOverride && locOverride[1] ? (notTBD ? maptag + locOverride[1] + '</a>' : locOverride[1])
-                                                           : (notTBD ? maptag + e.location.match(/[^,]*/)[0] + '</a>' : 'TBD');
+                var venSub = locOverride && locOverride[1] ? (notTBD ? maptag + locOverride[1] + mapendtag : locOverride[1])
+                                                           : (notTBD ? maptag + e.location.match(/[^,]*/)[0] + mapendtag : 'TBD');
                 var citySub = locOverride && locOverride[2] ? locOverride[2] : (notTBD ? e.location.match(/, *([^,]*), *FL/)[1] : 'TBD');
                 var date = pickOne(whens)
                         .replace('$d', start.toLocaleDateString('en-US', dateOpts) + dateSfx(start))
