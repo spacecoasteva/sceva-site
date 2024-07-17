@@ -1,18 +1,18 @@
-# Wicked Garden Gnomes Website
+# Space Coast EVA Website
 
-This is the project for the [Wicked Garden Gnomes
-website](https://www.wickedgardengnomes.com), which is hosted on Google's
+This is the project for the [Space Coast EVA
+website](https://www.spacecoasteva.com), which is hosted on Google's
 Firebase static hosting service.  The site is managed via the
-wickedgardengnomes@gmail.com Google account.
+spacecoasteva@gmail.com Google account.
 
 The site is mostly static, consisting of a single HTML file, a CSS stylesheet
 and a Javascript file, plus an additional CSS stylesheet and pair of
 Javascript files for the slideshow, which are provided by an external project.
 There is also a small calendar page that just wraps a frame populated by a
-Google Calendar view of the band's gig schedule.
+Google Calendar view of the group's meetings and events.
 
 The non-static elements of the site are populated by Javascript code, which
-pulls in the schedule of upcoming gigs, from Google Calendar.
+pulls in the schedule of upcoming meetings and events, from Google Calendar.
 
 ## Getting Started
 
@@ -32,8 +32,8 @@ test, maybe deploy to a preview channel, and finally deploy the live site.
   * _Follow instructions in README_
   * nvm install node
   * npm install -g firebase-tools
-* git clone git@github.com:bibach/wggsite.git
-  * cd wggsite
+* git clone git@github.com:bibach/sceva-site.git
+  * cd sceva-site
 * firebase login
   * firebase projects:list
 * firebase use staging
@@ -43,4 +43,4 @@ test, maybe deploy to a preview channel, and finally deploy the live site.
 
 ## TODO
 
-* Create Github account under WGG account, move repo there.
+* Create Github account under SCEVA account, move repo there.

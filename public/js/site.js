@@ -16,74 +16,109 @@ function toggleDetail(e) {
 
 function loadEvents() {
     var CAL_URL = 'https://www.googleapis.com/calendar/v3/calendars/';
-    var CAL_ID = 'vt6m1geim5tivevgktlil4dhds%40group.calendar.google.com';
+    var CAL_ID = '6d94a4fc92555fbdd3a2541300bfa9ce8a55621d1cd9feafd12aeb18fc489e90%40group.calendar.google.com';
     var CAL_ARGS = '/events?maxResults=20&orderBy=startTime&singleEvents=true';
-    var API_KEY = '&key=AIzaSyDOJ_K7_X1N8_bJTeSwaodOd6JKoN6ntmc';
-    var ADD_URL = 'https://www.google.com/calendar/render?action=TEMPLATE&sf=true&output=xml&sprop=website:www.wickedgardengnomes.com';
+    var API_KEY = '&key=AIzaSyDQQv6yLc_d3zkHDDHHH6j43N9iZzKQLEA';
+    var ADD_URL = 'https://www.google.com/calendar/render?action=TEMPLATE&sf=true&output=xml&sprop=website:spacecoasteva.club';
     var MAP_URL = 'https://maps.google.com/maps?q=';
-    var min = '&timeMin=' + (new Date(Date.now() - 6 * 60 * 60 * 1000)).toISOString();
-    var max = '&timeMax=' + (new Date(Date.now() + 182 * 24 * 60 * 60 * 1000)).toISOString();
+    var lang = navigator.languages[0];
+    var etz = { timeZone: 'America/New_York' };
+    var mtz = Intl.DateTimeFormat().resolvedOptions().timeZone != etz.timeZone ? ' ET' : '';
+    var min = '&timeMin=' + (new Date(Date.now() - 182 * 24 * 60 * 60 * 1000)).toISOString();
+    var max = '&timeMax=' + (new Date(Date.now() + 62 * 24 * 60 * 60 * 1000)).toISOString();
     var req = new XMLHttpRequest();
     req.addEventListener('load', function() {
         var eventsDiv = document.getElementById('events');
+        var prevDiv = document.getElementById('prev-events');
         var events = JSON.parse(this.response).items;
-        var rows = events.length > 0 ? '' : 'No upcoming events.';
+        var now = new Date(Date.now() - 6 * 60 * 60 * 1000);
+        var next_info = null;
+        var rows = '';
+        var prevRows = '';
         for (var i = 0; i < events.length; i++) {
             var e = events[i];
             var start = new Date(e.start.dateTime || e.start.date);
             var end = new Date(e.end.dateTime || e.end.date);
             var date = start.toDateString().replace(/(\s+)(\w+)\s*(\d+)\s*\d{3,}\s*/, '$1<span class="long">$2&nbsp;$3</span>');
             date = '<td class="event-date" title="' + start.toDateString() + '">' + date + '<span class="short">' + (start.getMonth() + 1) + '/' + start.getDate() + '</span></td>';
-            var time = start.toLocaleTimeString() + '&nbsp;- ' + end.toLocaleTimeString();
+            var time = start.toLocaleTimeString(lang, etz) + '&nbsp;- ' + end.toLocaleTimeString(lang, etz);
             time = '<td class="event-time">' + time.replace(/:\d\d /g, ' ').replace(/ ([AaPp])([Mm])/g, '<span class="long">&nbsp;$1$2</span><span class="short">$1</span>') + '</td>';
-            var summary = e.summary.replace(/^ *wgg *(sc)? *(at *|([^@]))/i, 'WGG $1 @ $3')
-                                   .replace(/\bSC\b/i, 'feat. Steve Cohen');
-            var text = e.location || e.description || summary;
-            text = '<td class="event-text" title="' + text + '"><span></span>' + summary + '</td>';
+            var desc = e.description ? e.description.replace(/ *{[^}]*}/, '') : '';
+            var text = e.location || desc || e.summary;
+            text = '<td class="event-text" title="' + text + '"><span></span>' + e.summary + '</td>';
             var dateFormat = function(d) { return d.toISOString().replace(/-|:|\.\d+/g, ''); }
-            var add = ADD_URL + '&text=' + encodeURIComponent(summary) + '&dates=' +
+            var add = ADD_URL + '&text=' + encodeURIComponent(e.summary) + '&dates=' +
                 [start, end].map(dateFormat).join('/') +
-                (e.description ? '&details=' + encodeURIComponent(e.description) : '') +
+                (desc ? '&details=' + encodeURIComponent(desc) : '') +
                 (e.location ? '&location=' + encodeURIComponent(e.location) : '');
-            link = '<td class="event-link" title="Add this event to your Google Calendar"><a href="' + add + '" target="_blank"><img src="img/logo-plus.png"></a></td>';
-            var rule = e.description && e.location ? '<hr/>' : '';
-            var maptag = '<a title="Wicked Map!" target="_blank" href="' + MAP_URL + encodeURIComponent(e.location) + '">';
-            var detail = (e.description || '') + rule + (e.location ? maptag + e.location + '</a>' : '');
+            link = '<td class="event-link" title="Add this event to your Google Calendar"><a href="' + add + '" target="_blank"><img src="img/logo-plus.png"/></a></td>';
+            var rule = desc && e.location ? '<hr/>' : '';
+            var maptag = '<a title="Map" target="_blank" href="' + MAP_URL + encodeURIComponent(e.location) + '">';
+            var mapendtag = '<img class="map" src="img/map.png"/></a>';
+            var isTBD = e.location.match(/\btb[da]\b/i);
+            var summaryDetails = (start < now || isTBD) ? 'summary' : 'details';
+            var detailLoc = e.location ? (isTBD ? e.location : maptag + e.location + mapendtag) : '';
+            var detail = (desc || '') + rule + detailLoc;
             detail = (detail ? '<tr class="event-detail"><td colspan="4"><div>' + detail + '</div></td></tr>' : '');
-            rows += '<tr class="event summary">' + date + time + text + link + '</tr>' + detail;
-            if (i == 0) {
-                var intros     = [ 'Join us next', 'Catch the Gnomes', 'Gnext Gnome outing is',
-                                   'Have a Wicked good time with us', 'See you next',
-                                   'Looking forward to rocking next' ];
+            newRow = '<tr class="event ' + summaryDetails + '">' + date + time + text + link + '</tr>' + detail;
+            if (start < now) {
+                prevRows = newRow + prevRows;
+            } else {
+                rows += newRow;
+            }
+            if (next_info == null && rows != '') {
+                var intros     = [ 'Please join us', 'Next SCEVA meeting is' ];
                 var wherewhens = [ ' on $d$v. ', '$v on $d. ' ];
                 var wheres     = [ ' at $v in $c', ' at $c\'s $v' ];
                 var whens      = [ '$w, $d', '$d ($w)', '$W, $d', '$d ($W)' ];
-                var whattimes  = [ 'Downbeat is at 6:30pm!', 'Party starts at 6:30pm!',
-                                   'Fun begins at 6:30pm!', 'Music begins at 6:30pm!' ];
+                var whattimes  = [ 'Meeting starts at $t!', 'We\'ll see you at $t!' ];
                 var dateOpts   = { 'month': 'long', 'day': 'numeric' };
                 function pickOne(array) { return array[Math.floor(Math.random() * array.length)]; }
                 function dateSfx(d) {return['st','nd','rd'][((d.getDate()+90)%100-10)%10-1]||'th';}
                 function sumVenue(s) { return s.indexOf('@') < 0 ? '... ' + s : ' at ' + s.split('@')[1].trim(); }
+                var locOverride = e.description ? e.description.match(/ *{([^@}]*)@([^}]*)}/) : [];
+                var notTBD = e.location && !e.location.match(/\btb[da]\b/i);
+                var venSub = locOverride && locOverride[1] ? (notTBD ? maptag + locOverride[1] + mapendtag : locOverride[1])
+                                                           : (notTBD ? maptag + e.location.match(/[^,]*/)[0] + mapendtag : 'TBD');
+                var citySub = locOverride && locOverride[2] ? locOverride[2] : (notTBD ? e.location.match(/, *([^,]*), *FL/)[1] : 'TBD');
                 var date = pickOne(whens)
                         .replace('$d', start.toLocaleDateString('en-US', dateOpts) + dateSfx(start))
                         .replace('$w', start.toLocaleDateString('en-US', { 'weekday': 'short' }))
                         .replace('$W', start.toLocaleDateString('en-US', { 'weekday': 'long' }));
-                var venue = (!e.location ? sumVenue(summary) : (pickOne(wheres)
-                        .replace('$v', maptag + e.location.match(/[^,]*/)[0] + '</a>')
-                        .replace('$c', e.location.match(/, *([^,]*), *FL/)[1])));
-                var next_info = document.getElementById('next_info');
+                var venue = (!e.location ? sumVenue(e.summary) : (pickOne(wheres)
+                        .replace('$v', venSub).replace('$c', citySub)));
+                next_info = document.getElementById('next_info');
                 next_info.innerHTML = (pickOne(intros) + pickOne(wherewhens) + pickOne(whattimes))
                         .replace('$d', date).replace('$v', venue)
-                        .replace('$t', start.toLocaleTimeString().replace(/(:00)?:\d+ /, '').toLowerCase());
+                        .replace('$t', start.toLocaleTimeString(lang, etz).replace(/(:00)?:\d+ /, '').toLowerCase() + mtz);
                 next_info.nextElementSibling.setAttribute("href", add);
-                document.getElementById('next_show').classList.add('live');
+                document.getElementById('next_event').classList.add('live');
             }
         }
-        eventsDiv.innerHTML = rows;
+        eventsDiv.innerHTML = rows == '' ? 'No upcoming events.' : rows;
+        prevDiv.innerHTML = prevRows == '' ? 'No previous events.' : prevRows;
         document.body.addEventListener('click', toggleDetail);
     });
     req.open('GET', CAL_URL + CAL_ID + CAL_ARGS + min + max + API_KEY);
     req.send();
 }
 
-window.onload = loadEvents;
+function setupSubscribeForm() {
+    document.getElementById('subscribe-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var email = document.getElementById('email_address');
+        emailjs.sendForm('service_02hpmh6', 'template_0jf2gac', this)
+            .then(() => {
+                    email.placeholder = 'Request sent!';
+                    email.value = ''; },
+                  (error) => {
+                    email.placeholder = 'Error, please try again.';
+                    email.value = '';
+                    console.log('Email send failed.', error); });
+    });
+}
+
+(function() { emailjs.init({ publicKey: "ZfzU0gfct7gnvMa1e", }); })();
+
+window.addEventListener("load", loadEvents, false);
+window.addEventListener("load", setupSubscribeForm, false);
