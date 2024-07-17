@@ -85,7 +85,7 @@ p.member span { display: inline-block; min-width: 7em; text-indent: 0; }
     background-image: url(../img/googlelogo_color_46x16dp.png); }
 .logo-plus-button-lockup-text {
     font-family: 'Product Sans',Arial,Helvetica,sans-serif; font-size: 13px;
-    opacity: .54; color: rgb(50,50,50); position: relative; top: -3px; }
+    opacity: .54; color: rgb(50,50,50); text-shadow: none; position: relative; top: -3px; }
 .subscribe-image { cursor: pointer; padding-top: 0.3em; }
 
 div.bg { color: #63F331; text-align: center; }
