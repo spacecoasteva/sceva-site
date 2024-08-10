@@ -3,7 +3,9 @@
 This is the project for the [Space Coast EVA
 website](https://spacecoasteva.club), which is hosted on Google's
 [Firebase](https://firebase.google.com/) static hosting service.  The site is
-managed via the spacecoasteva@gmail.com Google account.
+managed via the spacecoasteva@gmail.com Google account.  Additional details
+about this site and other elements of the club's online presence can be found
+in a Google Drive document called [SCEVA Internet Presence](https://docs.google.com/document/d/107umKIXFw8pY-XHuiLe-WJnL7LBYFuULtmiH3weoWnQ/edit#heading=h.9s9owvuttjt).
 
 The site is mostly static, consisting of a single HTML file, a CSS stylesheet,
 a Javascript file and a handful of images.  The non-static elements of the site
