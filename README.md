@@ -7,9 +7,9 @@ managed via the spacecoasteva@gmail.com Google account.
 
 The site is mostly static, consisting of a single HTML file, a CSS stylesheet,
 a Javascript file and a handful of images.  The non-static elements of the site
-are populated by Javascript code, which pulls in the schedule of upcoming
-meetings and events from Google Calendar.  All of this content is managed in
-a [repository hosted on GitHub](https://github.com/bibach/sceva-site).
+are populated by Javascript code, which pulls in the schedule of meetings and
+events from Google Calendar.  All of this content is managed in a
+[repository hosted on GitHub](https://github.com/bibach/sceva-site).
 
 An additional Javascript file, hosted on an external (CDN) site, allows users
 to enter their email address to sign up for the club's email updates.  This
