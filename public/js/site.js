@@ -103,22 +103,4 @@ function loadEvents() {
     req.send();
 }
 
-function setupSubscribeForm() {
-    document.getElementById('subscribe-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        var email = document.getElementById('email_address');
-        emailjs.sendForm('service_02hpmh6', 'template_0jf2gac', this)
-            .then(() => {
-                    email.placeholder = 'Request sent!';
-                    email.value = ''; },
-                  (error) => {
-                    email.placeholder = 'Error, please try again.';
-                    email.value = '';
-                    console.log('Email send failed.', error); });
-    });
-}
-
-(function() { emailjs.init({ publicKey: "ZfzU0gfct7gnvMa1e", }); })();
-
 window.addEventListener("load", loadEvents, false);
-window.addEventListener("load", setupSubscribeForm, false);
