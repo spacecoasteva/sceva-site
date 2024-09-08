@@ -8,7 +8,7 @@ body { color: #FFFFFF; background-color: #01073f; background-origin: content-box
        text-shadow: -1px -1px 1px black, 1px -1px 1px black, 1px 1px 1px black, -1px 1px 1px black; }
 @media (min-width: 1280px) {
     body { background-image: url(../img/spacex-timelapselaunch.jpg); } }
-p.banner { display: flex; clear: both; margin: 10px 0 0 0; text-shadow: none;
+p.banner { display: flex; clear: both; margin: 25px 0 0 0; text-shadow: none;
            text-align: center; text-wrap: balance; font-size: 1.4em; }
 p.banner span { display: inline-flex; background: #2A3784; border-radius: 0.5em;
                 padding: 0.15em 0; min-width: 0; }
@@ -25,9 +25,7 @@ p.ticker.live > span > a { position: absolute; bottom: -10px; right: -12px; }
 p.ticker span span a { display: contents; color: #3333FF; }
 p.ticker:before, p.ticker:after { flex-grow: 1; content: ""; }
 p.ticker > span:before, p.ticker > span:after { width: 0.5em; min-width: 0.3em; content: ""; }
-@media (min-width: 19em) { p.chapter { font-size: 1.6em; } }
-@media (min-width: 21em) { p.chapter { font-size: 1.8em; } }
-@media (min-width: 23em) { p.chapter { font-size: 2.0em; } }
+p.chapter { margin-top: 10px; }
 
 img { margin-top: 10px; }
 img.map { margin: 0; width: 32px; padding-left: 2px; }
@@ -35,7 +33,6 @@ img.logo { max-width: 90%; height: auto; margin-bottom: 10px; }
 p.contact { clear: right; float: right; text-align: right; margin: 0 0 0 15px; }
 p.contact img { margin-top: 3px; }
 @media (max-width: 28em) { p.contact span { display: none; } }
-p.members { margin: 25px 0 0 0; }
 p.member { margin: 6px 0 3px 4em; text-indent: -3.5em; }
 p.member ~ p.member { margin-top: 0; }
 p.member span { display: inline-block; min-width: 7em; text-indent: 0; }
@@ -43,6 +40,7 @@ p.member span { display: inline-block; min-width: 7em; text-indent: 0; }
 #subscribe-form { margin-bottom: 16px; }
 #subscribe-form > p { margin-bottom: 8px; }
 
+table { width: 100%; border-spacing: 0; }
 #events td { vertical-align: top; padding-top: 0.3em; }
 .event-detail div { overflow: hidden; padding: 0; max-height: 0;
     -webkit-transition: max-height 1.5s cubic-bezier(0, 1.05, 0, 1);
@@ -68,6 +66,10 @@ p.member span { display: inline-block; min-width: 7em; text-indent: 0; }
 @media (max-width: 42em) {
     .event-date .long, .event-time .long { display: none; }
     .event-date .short, .event-time .short { display: inline; } }
+
+#posts p { margin-left: 82px; position: relative; }
+#posts img { width: 72px; height: 72px; border-radius: 10px;
+    position: absolute; left: -82px; top: 5px; margin: 0; }
 
 .logo-plus-button { display: block; height: 18px; background-color: #fff; padding-right: 2px; }
 .logo-plus-button>div { display: inline-block; }
