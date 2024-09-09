@@ -70,6 +70,8 @@ table { width: 100%; border-spacing: 0; }
 #posts p { margin-left: 82px; position: relative; }
 #posts img { width: 72px; height: 72px; border-radius: 10px;
     position: absolute; left: -82px; top: 5px; margin: 0; }
+#fb_logo { display: inline-block; width: 1.1em; position: relative; }
+#fb_logo img { width: 1.1em; position: absolute; top: -1.55em; left: 0em; }
 
 .logo-plus-button { display: block; height: 18px; background-color: #fff; padding-right: 2px; }
 .logo-plus-button>div { display: inline-block; }

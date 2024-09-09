@@ -10,16 +10,12 @@ in a Google Drive document called [SCEVA Internet Presence](https://docs.google.
 The site is mostly static, consisting of a single HTML file, a CSS stylesheet,
 a Javascript file and a handful of images.  The non-static elements of the site
 are populated by Javascript code, which pulls in the schedule of meetings and
-events from Google Calendar.  All of this content is managed in a
-[repository hosted on GitHub](https://github.com/bibach/sceva-site).
+events from Google Calendar and recent posts on the club's [blog](https://blog.spacecoasteva.club/).
+All of this content is managed in a [repository hosted on GitHub](https://github.com/spacecoasteva/sceva-site).
 
-An additional Javascript file, hosted on an external (CDN) site, allows users
-to enter their email address to sign up for the club's email updates.  This
-uses the [emailjs.com](https://emailjs.com) service to send an email to the
-club's Gmail account, where it is automatically archived into a folder and
-forwarded to the mailing list administrator.  This setup may be replaced,
-in the future, with functionality provided by [MailChimp](https://mailchimp.com),
-if the club decides to use that service.
+A simple form allows users to enter their email address to sign up for the
+club's email updates.  Form submissions, as well as the email updates, are
+handled via [MailChimp](https://mailchimp.com).
 
 ## Getting Started
 
@@ -56,7 +52,3 @@ test, maybe deploy to a preview channel, and finally deploy the live site.
   * firebase emulators:start
   * firebase hosting:channel:deploy preview-id
   * firebase deploy
-
-## TODO
-
-* Create Github account under SCEVA account, move repo there.
