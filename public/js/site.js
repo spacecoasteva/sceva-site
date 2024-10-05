@@ -105,18 +105,18 @@ function loadEvents() {
                 function dateSfx(d) {return['st','nd','rd'][((d.getDate()+90)%100-10)%10-1]||'th';}
                 function sumVenue(s) { return s.indexOf('@') < 0 ? '... ' + s : ' at ' + s.split('@')[1].trim(); }
                 var locOverride = e.description ? e.description.match(/ *{([^@}]*)@([^}]*)}/) : [];
-                var notTBD = e.location && !e.location.match(/\btb[da]\b/i);
-                var venSub = locOverride && locOverride[1] ? (notTBD ? maptag + locOverride[1] + mapendtag : locOverride[1])
-                                                           : (notTBD ? maptag + e.location.match(/[^,]*/)[0] + mapendtag : 'TBD');
-                var citySub = locOverride && locOverride[2] ? locOverride[2] : (notTBD ? e.location.match(/, *([^,]*), *FL/)[1] : 'TBD');
+                var isTBD = !e.location || e.location.match(/\btb[da]\b/i);
+                var venSub = locOverride && locOverride[1] ? (isTBD ? locOverride[1] : maptag + locOverride[1] + mapendtag)
+                                                           : (isTBD ? 'TBD' : maptag + e.location.match(/[^,]*/)[0] + mapendtag);
+                var citySub = locOverride && locOverride[2] ? locOverride[2] : (isTBD ? 'TBD' : e.location.match(/, *([^,]*), *FL/)[1]);
                 var date = pickOne(whens)
                         .replace('$d', start.toLocaleDateString('en-US', dateOpts) + dateSfx(start))
                         .replace('$w', start.toLocaleDateString('en-US', { 'weekday': 'short' }))
                         .replace('$W', start.toLocaleDateString('en-US', { 'weekday': 'long' }));
-                var venue = (!e.location ? sumVenue(e.summary) : (pickOne(wheres)
-                        .replace('$v', venSub).replace('$c', citySub)));
+                var venue = (isTBD ? ', location to be announced' : (!e.location ? sumVenue(e.summary) :
+                        (pickOne(wheres).replace('$v', venSub).replace('$c', citySub))));
                 next_info = document.getElementById('next_info');
-                next_info.innerHTML = (pickOne(intros) + pickOne(wherewhens) + pickOne(whattimes))
+                next_info.innerHTML = (pickOne(intros) + (isTBD ? wherewhens[0] : pickOne(wherewhens)) + pickOne(whattimes))
                         .replace('$d', date).replace('$v', venue)
                         .replace('$t', start.toLocaleTimeString(lang, etz).replace(/(:00)?:\d+ /, '').toLowerCase() + mtz);
                 next_info.nextElementSibling.setAttribute("href", add);
