@@ -48,7 +48,7 @@ table { width: 100%; border-spacing: 0; }
     -ms-transition: max-height 1.5s cubic-bezier(0, 1.05, 0, 1);
     -o-transition: max-height 1.5s cubic-bezier(0, 1.05, 0, 1);
     transition: max-height 1.5s ease cubic-bezier(0, 1.05, 0, 1); }
-.details + .event-detail div { max-height: 11em;
+.details + .event-detail div { max-height: 20em;
     -webkit-transition: max-height 1.5s ease;
     -moz-transition: max-height 1.5s ease;
     -ms-transition: max-height 1.5s ease;

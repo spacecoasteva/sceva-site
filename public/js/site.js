@@ -72,6 +72,7 @@ function loadEvents() {
             var time = start.toLocaleTimeString(lang, etz) + '&nbsp;- ' + end.toLocaleTimeString(lang, etz);
             time = '<td class="event-time">' + time.replace(/:\d\d /g, ' ').replace(/ ([AaPp])([Mm])/g, '<span class="long">&nbsp;$1$2</span><span class="short">$1</span>') + '</td>';
             var desc = e.description ? e.description.replace(/ *{[^}]*}/, '') : '';
+            desc = desc.replaceAll(/(?:<u>( *<a)|(<\/a> *)<\/u>)/g, "$1$2");
             var text = e.location || desc || e.summary;
             text = '<td class="event-text" title="' + text + '"><span></span>' + e.summary + '</td>';
             var dateFormat = function(d) { return d.toISOString().replace(/-|:|\.\d+/g, ''); }
