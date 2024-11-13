@@ -37,6 +37,7 @@ p.member { margin: 6px 0 3px 4em; text-indent: -3.5em; }
 p.member ~ p.member { margin-top: 0; }
 p.member span { display: inline-block; min-width: 7em; text-indent: 0; }
 .centered { text-align: center; text-wrap: balance; }
+.copyright { font-size: 80%; color: #999999; }
 #subscribe-form { margin-bottom: 16px; }
 #subscribe-form > p { margin-bottom: 8px; }
 
