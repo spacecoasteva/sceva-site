@@ -50,6 +50,8 @@ function loadEvents() {
     var CAL_ARGS = '/events?maxResults=20&orderBy=startTime&singleEvents=true';
     var ADD_URL = 'https://www.google.com/calendar/render?action=TEMPLATE&sf=true&output=xml&sprop=website:spacecoasteva.club';
     var MAP_URL = 'https://maps.google.com/maps?q=';
+    var ADD_LINK_TITLE = 'Add this event to your Google Calendar';
+    var BLOG_LINK_TITLE = 'See pictures and description from this event';
     var lang = navigator.languages[0];
     var etz = { timeZone: 'America/New_York' };
     var mtz = Intl.DateTimeFormat().resolvedOptions().timeZone != etz.timeZone ? ' ET' : '';
@@ -80,7 +82,12 @@ function loadEvents() {
                 [start, end].map(dateFormat).join('/') +
                 (desc ? '&details=' + encodeURIComponent(desc) : '') +
                 (e.location ? '&location=' + encodeURIComponent(e.location) : '');
-            link = '<td class="event-link" title="Add this event to your Google Calendar"><a href="' + add + '" target="_blank"><img src="img/logo-plus.png"/></a></td>';
+            var blog = desc.match(/(\bhttps?:\/\/blog.spacecoasteva.club\/[^\]})<>'" \t]*)/);
+            var link = start >= now ? add : (blog && blog[0] ? blog[0] : '');
+            var linkTitle = link ? (start >= now ? ADD_LINK_TITLE : BLOG_LINK_TITLE) : '';
+            var linkIcon  = link ? (start >= now ? 'logo-plus.png' : 'camera.png') : '';
+            link = link ? '<a href="' + link + '" target="_blank"><img src="img/' + linkIcon + '"/></a>' : '';
+            link = '<td class="event-link" title="' + linkTitle + '">' + link + '</td>';
             var rule = desc && e.location ? '<hr/>' : '';
             var maptag = '<a title="Map" target="_blank" href="' + MAP_URL + encodeURIComponent(e.location) + '">';
             var mapendtag = '<img class="map" src="img/map.png"/></a>';
