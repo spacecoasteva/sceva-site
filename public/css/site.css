@@ -56,15 +56,18 @@ table { width: 100%; border-spacing: 0; }
     -o-transition: max-height 1.5s ease;
     transition: max-height 1.5s ease; }
 .event-detail td { padding: 0 1em 0 2em !important; }
+.event-detail a { overflow-wrap: anywhere; }
 .event-date, .event-time { padding-right: 1em; }
 .event-date .long, .event-time .long { display: inline; }
 .event-date .short, .event-time .short { display: none; }
-.event-text { padding-left: 1.2em; }
+.event-text { padding-left: 1.2em; padding-right: 0.3em; }
 .event-text span { display: inline-block; width: 1.2em; margin-left: -1.2em; }
 .summary .event-text span::before { content: "\0229E"; }
 .details .event-text span::before { content: "\0229F"; }
 .event-link img { padding: 0; margin: 0; height: 80%; }
 @media (max-width: 42em) {
+    .event-date { max-width: 2.8em; }
+    .event-time { max-width: 3.2em; }
     .event-date .long, .event-time .long { display: none; }
     .event-date .short, .event-time .short { display: inline; } }
 
