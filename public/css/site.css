@@ -42,7 +42,7 @@ p.member span { display: inline-block; min-width: 7em; text-indent: 0; }
 #subscribe-form > p { margin-bottom: 8px; }
 
 table { width: 100%; border-spacing: 0; }
-#events td { vertical-align: top; padding-top: 0.3em; }
+#events td, #prev-events td { vertical-align: top; padding-top: 0.3em; }
 .event-detail div { overflow: hidden; padding: 0; max-height: 0;
     -webkit-transition: max-height 1.5s cubic-bezier(0, 1.05, 0, 1);
     -moz-transition: max-height 1.5s cubic-bezier(0, 1.05, 0, 1);
