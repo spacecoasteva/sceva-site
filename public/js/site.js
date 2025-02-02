@@ -85,7 +85,7 @@ function loadEvents() {
             var blog = desc.match(/(\bhttps?:\/\/blog.spacecoasteva.club\/[^\]})<>'" \t]*)/);
             var link = start >= now ? add : (blog && blog[0] ? blog[0] : '');
             var linkTitle = link ? (start >= now ? ADD_LINK_TITLE : BLOG_LINK_TITLE) : '';
-            var linkIcon  = link ? (start >= now ? 'logo-plus.png' : 'camera.png') : '';
+            var linkIcon  = link ? (start >= now ? 'calendar-add.png' : 'camera.png') : '';
             link = link ? '<a href="' + link + '" target="_blank"><img src="img/' + linkIcon + '"/></a>' : '';
             link = '<td class="event-link" title="' + linkTitle + '">' + link + '</td>';
             var rule = desc && e.location ? '<hr/>' : '';
