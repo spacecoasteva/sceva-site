@@ -71,7 +71,7 @@ table { width: 100%; border-spacing: 0; }
     .event-date .long, .event-time .long { display: none; }
     .event-date .short, .event-time .short { display: inline; } }
 
-#posts p { margin-left: 82px; position: relative; }
+#posts p { margin-left: 82px; position: relative; min-height: 72px; }
 #posts img { width: 72px; height: 72px; border-radius: 10px;
     position: absolute; left: -82px; top: 5px; margin: 0; }
 #fb_logo { display: inline-block; width: 1.1em; position: relative; }

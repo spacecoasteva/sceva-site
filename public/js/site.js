@@ -26,7 +26,7 @@ function loadGoogleApi(url, callback) {
 function loadBlogFeed() {
     var BLOG_URL = 'blogger/v3/blogs/';
     var BLOG_ID = '4570358893544606507';
-    var BLOG_ARGS = '/posts?status=live&orderBy=updated&maxResults=3&view=READER&fetchImages=true&fetchBodies=true';
+    var BLOG_ARGS = '/posts?status=live&orderBy=published&maxResults=3&view=READER&fetchImages=true&fetchBodies=true';
     loadGoogleApi(BLOG_URL + BLOG_ID + BLOG_ARGS, function() {
         var postsDiv = document.getElementById('posts');
         var posts = JSON.parse(this.response).items;
@@ -85,7 +85,7 @@ function loadEvents() {
             var blog = desc.match(/(\bhttps?:\/\/blog.spacecoasteva.club\/[^\]})<>'" \t]*)/);
             var link = start >= now ? add : (blog && blog[0] ? blog[0] : '');
             var linkTitle = link ? (start >= now ? ADD_LINK_TITLE : BLOG_LINK_TITLE) : '';
-            var linkIcon  = link ? (start >= now ? 'logo-plus.png' : 'camera.png') : '';
+            var linkIcon  = link ? (start >= now ? 'calendar-add.png' : 'camera.png') : '';
             link = link ? '<a href="' + link + '" target="_blank"><img src="img/' + linkIcon + '"/></a>' : '';
             link = '<td class="event-link" title="' + linkTitle + '">' + link + '</td>';
             var rule = desc && e.location ? '<hr/>' : '';
