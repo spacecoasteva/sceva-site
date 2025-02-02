@@ -26,7 +26,7 @@ function loadGoogleApi(url, callback) {
 function loadBlogFeed() {
     var BLOG_URL = 'blogger/v3/blogs/';
     var BLOG_ID = '4570358893544606507';
-    var BLOG_ARGS = '/posts?status=live&orderBy=updated&maxResults=3&view=READER&fetchImages=true&fetchBodies=true';
+    var BLOG_ARGS = '/posts?status=live&orderBy=published&maxResults=3&view=READER&fetchImages=true&fetchBodies=true';
     loadGoogleApi(BLOG_URL + BLOG_ID + BLOG_ARGS, function() {
         var postsDiv = document.getElementById('posts');
         var posts = JSON.parse(this.response).items;
