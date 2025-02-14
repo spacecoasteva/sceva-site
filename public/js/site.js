@@ -72,7 +72,7 @@ function makeICal(start, end, summary, desc, loc) {
             pfx + '-' + dt(start) + '.ics'];
 }
 
-function loadEvents() {
+function loadEvents(openModal) {
     var CAL_URL = 'calendar/v3/calendars/';
     var CAL_ID = '6d94a4fc92555fbdd3a2541300bfa9ce8a55621d1cd9feafd12aeb18fc489e90%40group.calendar.google.com';
     var CAL_ARGS = '/events?maxResults=20&orderBy=startTime&singleEvents=true';
@@ -95,6 +95,7 @@ function loadEvents() {
         var next_info = null;
         var rows = '';
         var prevRows = '';
+        var eventObjs = {};
         for (var i = 0; i < events.length; i++) {
             var e = events[i];
             var start = new Date(e.start.dateTime || e.start.date);
@@ -120,7 +121,9 @@ function loadEvents() {
             var linkFile  = link && showICal ? ical[1] : '';
             var linkDown  = linkFile ? '" download="' + linkFile : '';
             var linkIcon  = link ? (start >= now ? 'calendar-add.png' : 'camera.png') : '';
-            var linkCell = link ? '<a href="' + link + '" target="_blank' + linkDown + '"><img src="img/' + linkIcon + '"/></a>' : '';
+            var eventNum  = 'eventNum' + i;
+            var linkCell  = start >= now ? (link ? '<button id="' + eventNum + '" class="event-add"><img src="img/' + linkIcon + '"/></button>' : '') :
+                (link ? '<a href="' + link + '" target="_blank' + linkDown + '"><img src="img/' + linkIcon + '"/></a>' : '');
             linkCell = '<td class="event-link" title="' + linkTitle + '">' + linkCell + '</td>';
             var rule = desc && e.location ? '<hr/>' : '';
             var maptag = '<a title="Map" target="_blank" href="' + MAP_URL + encodeURIComponent(e.location) + '">';
@@ -135,6 +138,10 @@ function loadEvents() {
                 prevRows = newRow + prevRows;
             } else {
                 rows += newRow;
+                eventObjs[eventNum] = { 'name': e.summary, 'link': link,
+                    'ical': 'data:text/calendar,' + encodeURIComponent(ical[0]),
+                    'date': date.replace(/^[^>]*"([^"]*)">.*/, '$1'),
+                    'time': time.replace(/^[^>]*>([^<]*)[^[^;]*;([AP]M).*/, '$1$2') };
             }
             if (next_info == null && rows != '') {
                 var intros     = [ 'Please join us', 'Next SCEVA meeting is' ];
@@ -168,12 +175,45 @@ function loadEvents() {
         }
         eventsDiv.innerHTML = rows == '' ? 'No upcoming events.' : rows;
         prevDiv.innerHTML = prevRows == '' ? 'No previous events.' : prevRows;
+        for (var eventNum in eventObjs) {
+            var eventBtn = document.getElementById(eventNum);
+            eventBtn.onclick = (function(eventObj) {
+                return function(event) {
+                    openModal(eventObj);
+                    event.stopPropagation();
+                };
+            })(eventObjs[eventNum]);
+        }
         document.body.addEventListener('click', toggleDetail);
     });
 }
 
+function setupEventModal() {
+    var modal = document.getElementById('eventModal');
+    var close = document.getElementsByClassName('modal-close')[0];
+    var openModal = function(eventObj) {
+        for (var eventProp in eventObj) {
+            var element = document.getElementById('event-modal-' + eventProp);
+            if (element) {
+                if (element.nodeName == 'SPAN') { element.innerText = eventObj[eventProp]; }
+                else if (element.nodeName == 'A') { element.href = eventObj[eventProp]; }
+            }
+        }
+        modal.style.display = 'block';
+    }
+    var hideModal = function() { modal.style.display = 'none'; };
+    close.onclick = hideModal;
+    window.onclick = function(event) {
+        if (event.target == modal) { hideModal(); }
+    }
+    window.onkeyup = function(event) {
+        if (event.key == 'Escape' || event.key == 'Esc') { hideModal(); }
+    }
+    return openModal;
+}
+
 function loadContent() {
-    loadEvents();
+    loadEvents(setupEventModal());
     loadBlogFeed();
 }
 
