@@ -44,19 +44,49 @@ function loadBlogFeed() {
     });
 }
 
+function isiOS() {
+    return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) ||
+            (navigator.msMaxTouchPoints > 0) ||
+            [ 'iPad Simulator', 'iPhone Simulator', 'iPod Simulator',
+              'iPad', 'iPhone', 'iPod' ].includes(navigator.platform) ||
+            (/iPad|iPhone|iPod/.test(navigator.userAgent)) ||
+            // iPad on iOS 13 detection
+            (navigator.userAgent.includes("Mac") && "ontouchend" in document));
+}
+
+function makeICal(start, end, summary, desc, loc) {
+    var dt = function(d) { return d.toISOString().replace(/-|:|\.\d+/g, ''); }
+    //var now = new Date(); // FIXME METHOD:REQUEST~CREATED:' + dt(now) + '~
+    var org = 'SCEVA', calendar = 'Events', pfx = 'wgg-gig';
+    var domain = 'spacecoasteva.club';
+    var email = 'news@spacecoasteva.club';
+    return [('BEGIN:VCALENDAR~VERSION:2.0~PRODID:-//' + org + '//' + calendar + '//EN' +
+             '~BEGIN:VEVENT~UID:' + dt(start) + '@' + domain +
+             '~DTSTAMP:' + dt(start) + '~DTSTART:' + dt(start) +
+             '~DTEND:' + dt(end) + '~SUMMARY:' + summary +
+             (desc ? '~DESCRIPTION:' + desc : '') +
+             (loc ? '~LOCATION:' + loc + (loc.indexOf(',') > 0 ?
+                 '~STREET-ADDRESS:' + loc.split(',')[1].trim() : '') : '') +
+             '~ORGANIZER;CN="' + org + '":mailto:' + email + '~ATTENDEE;RSVP=FALSE:' +
+             '~END:VEVENT~END:VCALENDAR~').replaceAll('~', '\r\n'),
+            pfx + '-' + dt(start) + '.ics'];
+}
+
 function loadEvents() {
     var CAL_URL = 'calendar/v3/calendars/';
     var CAL_ID = '6d94a4fc92555fbdd3a2541300bfa9ce8a55621d1cd9feafd12aeb18fc489e90%40group.calendar.google.com';
     var CAL_ARGS = '/events?maxResults=20&orderBy=startTime&singleEvents=true';
     var ADD_URL = 'https://www.google.com/calendar/render?action=TEMPLATE&sf=true&output=xml&sprop=website:spacecoasteva.club';
     var MAP_URL = 'https://maps.google.com/maps?q=';
-    var ADD_LINK_TITLE = 'Add this event to your Google Calendar';
+    var ADD_ICAL_TITLE = 'Add this event to your calendar';
+    var ADD_GCAL_TITLE = 'Add this event to your Google Calendar';
     var BLOG_LINK_TITLE = 'See pictures and description from this event';
     var lang = navigator.languages[0];
     var etz = { timeZone: 'America/New_York' };
     var mtz = Intl.DateTimeFormat().resolvedOptions().timeZone != etz.timeZone ? ' ET' : '';
     var min = '&timeMin=' + (new Date(Date.now() - 182 * 24 * 60 * 60 * 1000)).toISOString();
     var max = '&timeMax=' + (new Date(Date.now() + 62 * 24 * 60 * 60 * 1000)).toISOString();
+    var showICal = false;//isiOS()
     loadGoogleApi(CAL_URL + CAL_ID + CAL_ARGS + min + max, function() {
         var eventsDiv = document.getElementById('events');
         var prevDiv = document.getElementById('prev-events');
@@ -78,16 +108,20 @@ function loadEvents() {
             var text = e.location || desc || e.summary;
             text = '<td class="event-text" title="' + text + '"><span></span>' + e.summary + '</td>';
             var dateFormat = function(d) { return d.toISOString().replace(/-|:|\.\d+/g, ''); }
-            var add = ADD_URL + '&text=' + encodeURIComponent(e.summary) + '&dates=' +
+            var gcal = ADD_URL + '&text=' + encodeURIComponent(e.summary) + '&dates=' +
                 [start, end].map(dateFormat).join('/') +
                 (desc ? '&details=' + encodeURIComponent(desc) : '') +
                 (e.location ? '&location=' + encodeURIComponent(e.location) : '');
             var blog = desc.match(/(\bhttps?:\/\/blog.spacecoasteva.club\/[^\]})<>'" \t]*)/);
-            var link = start >= now ? add : (blog && blog[0] ? blog[0] : '');
-            var linkTitle = link ? (start >= now ? ADD_LINK_TITLE : BLOG_LINK_TITLE) : '';
+            blog = blog && blog[0] ? blog[0] : '';
+            var ical = makeICal(start, end, e.summary, e.description, e.location);
+            var link = start >= now ? (showICal ? 'data:text/calendar,' + encodeURIComponent(ical[0]) : gcal) : blog;
+            var linkTitle = link ? (start >= now ? (showICal ? ADD_ICAL_TITLE : ADD_GCAL_TITLE) : BLOG_LINK_TITLE) : '';
+            var linkFile  = link && showICal ? ical[1] : '';
+            var linkDown  = linkFile ? '" download="' + linkFile : '';
             var linkIcon  = link ? (start >= now ? 'calendar-add.png' : 'camera.png') : '';
-            link = link ? '<a href="' + link + '" target="_blank"><img src="img/' + linkIcon + '"/></a>' : '';
-            link = '<td class="event-link" title="' + linkTitle + '">' + link + '</td>';
+            var linkCell = link ? '<a href="' + link + '" target="_blank' + linkDown + '"><img src="img/' + linkIcon + '"/></a>' : '';
+            linkCell = '<td class="event-link" title="' + linkTitle + '">' + linkCell + '</td>';
             var rule = desc && e.location ? '<hr/>' : '';
             var maptag = '<a title="Map" target="_blank" href="' + MAP_URL + encodeURIComponent(e.location) + '">';
             var mapendtag = '<img class="map" src="img/map.png"/></a>';
@@ -96,7 +130,7 @@ function loadEvents() {
             var detailLoc = e.location ? (isTBD ? e.location : maptag + e.location + mapendtag) : '';
             var detail = (desc || '') + rule + detailLoc;
             detail = (detail ? '<tr class="event-detail"><td colspan="4"><div>' + detail + '</div></td></tr>' : '');
-            newRow = '<tr class="event ' + summaryDetails + '">' + date + time + text + link + '</tr>' + detail;
+            newRow = '<tr class="event ' + summaryDetails + '">' + date + time + text + linkCell + '</tr>' + detail;
             if (start < now) {
                 prevRows = newRow + prevRows;
             } else {
@@ -127,7 +161,8 @@ function loadEvents() {
                 next_info.innerHTML = (pickOne(intros) + (isTBD ? wherewhens[0] : pickOne(wherewhens)) + pickOne(whattimes))
                         .replace('$d', date).replace('$v', venue)
                         .replace('$t', start.toLocaleTimeString(lang, etz).replace(/(:00)?:\d+ /, '').toLowerCase() + mtz);
-                next_info.nextElementSibling.setAttribute("href", add);
+                next_info.nextElementSibling.setAttribute("href", link);
+                if (linkFile) { next_info.nextElementSibling.setAttribute("download", linkFile); }
                 document.getElementById('next_event').classList.add('live');
             }
         }
