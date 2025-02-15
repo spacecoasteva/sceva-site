@@ -65,13 +65,14 @@ table { width: 100%; border-spacing: 0; }
 .summary .event-text span::before { content: "\0229E"; }
 .details .event-text span::before { content: "\0229F"; }
 .event-link img { padding: 0; margin: 0; height: 80%; }
+button.event-add { border: none; background: none; padding: 0; }
 @media (max-width: 42em) {
     .event-date { max-width: 2.8em; }
     .event-time { max-width: 3.2em; }
     .event-date .long, .event-time .long { display: none; }
     .event-date .short, .event-time .short { display: inline; } }
 
-#posts p { margin-left: 82px; position: relative; }
+#posts p { margin-left: 82px; position: relative; min-height: 72px; }
 #posts img { width: 72px; height: 72px; border-radius: 10px;
     position: absolute; left: -82px; top: 5px; margin: 0; }
 #fb_logo { display: inline-block; width: 1.1em; position: relative; }
@@ -95,6 +96,19 @@ table { width: 100%; border-spacing: 0; }
 
 div.bg { color: #63F331; text-align: center; }
 div.bg img { padding: 0; width: 60vw; min-width: 90px; max-width: 600px; }
+
+div.modal { display: none; position: fixed; z-index: 1;
+    left: 0; top: 0; width: 100%; height: 100%; overflow: auto;
+    background-color: rgb(0, 0, 0); background-color: rgba(0, 0, 0, 0.4); }
+div.modal-content { background-color: #fefefe; margin: 15% auto;
+    padding: 20px; border: 1px solid #888; border-radius: 20px;
+    width: 600px; max-width: 80%; color: black; text-shadow: none; }
+div.modal-content p { text-align: center; }
+div.modal-content p.addTo { margin-top: 2em; font-size: 75%; }
+span.modal-close {
+    color: #aaa; float: right; font-size: 28px; font-weight: bold; }
+span.modal-close:hover, span.modal-close:focus {
+    color: black; text-decoration: none; cursor: pointer; }
 
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background-color: #2A3784; }
