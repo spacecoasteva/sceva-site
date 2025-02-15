@@ -74,7 +74,7 @@ function makeICal(start, end, summary, desc, loc) {
 
 function loadEvents(openModal) {
     var CAL_URL = 'calendar/v3/calendars/';
-    var CAL_ID = '6d94a4fc92555fbdd3a2541300bfa9ce8a55621d1cd9feafd12aeb18fc489e90%40group.calendar.google.com';
+    var CAL_ID = 'spacecoasteva@gmail.com';
     var CAL_ARGS = '/events?maxResults=20&orderBy=startTime&singleEvents=true';
     var ADD_URL = 'https://www.google.com/calendar/render?action=TEMPLATE&sf=true&output=xml&sprop=website:spacecoasteva.club';
     var MAP_URL = 'https://maps.google.com/maps?q=';
@@ -105,6 +105,7 @@ function loadEvents(openModal) {
             var time = start.toLocaleTimeString(lang, etz) + '&nbsp;- ' + end.toLocaleTimeString(lang, etz);
             time = '<td class="event-time">' + time.replace(/:\d\d /g, ' ').replace(/ ([AaPp])([Mm])/g, '<span class="long">&nbsp;$1$2</span><span class="short">$1</span>') + '</td>';
             var desc = e.description ? e.description.replace(/ *{[^}]*}/, '') : '';
+            desc = desc.replaceAll(/^https:\/\/calendar.app.google\/.*\n?|\nhttps:\/\/calendar.app.google\/.*\n|\nhttps:\/\/calendar.app.google\/.*$/g, '');
             desc = desc.replaceAll(/(?:<u>( *<a)|(<\/a> *)<\/u>)/g, "$1$2");
             var text = e.location || desc || e.summary;
             text = '<td class="event-text" title="' + text + '"><span></span>' + e.summary + '</td>';
@@ -116,7 +117,9 @@ function loadEvents(openModal) {
             var blog = desc.match(/(\bhttps?:\/\/blog.spacecoasteva.club\/[^\]})<>'" \t]*)/);
             blog = blog && blog[0] ? blog[0] : '';
             var ical = makeICal(start, end, e.summary, e.description, e.location);
-            var link = start >= now ? (showICal ? 'data:text/calendar,' + encodeURIComponent(ical[0]) : gcal) : blog;
+            var icallink = 'data:text/calendar,' + encodeURIComponent(ical[0]);
+            var rsvp = e.description ? e.description.replace(/^(https:\/\/calendar.app.google\/[^\n]*).*|.*\n(https:\/\/calendar.app.google\/[^\n]*)\n.*|.*\n(https:\/\/calendar.app.google\/[^\n]*)$/s, '$1$2$3') : '';
+            var link = start >= now ? (showICal ? icallink : gcal) : blog;
             var linkTitle = link ? (start >= now ? (showICal ? ADD_ICAL_TITLE : ADD_GCAL_TITLE) : BLOG_LINK_TITLE) : '';
             var linkFile  = link && showICal ? ical[1] : '';
             var linkDown  = linkFile ? '" download="' + linkFile : '';
@@ -138,8 +141,8 @@ function loadEvents(openModal) {
                 prevRows = newRow + prevRows;
             } else {
                 rows += newRow;
-                eventObjs[eventNum] = { 'name': e.summary, 'link': link,
-                    'ical': 'data:text/calendar,' + encodeURIComponent(ical[0]),
+                eventObjs[eventNum] = { 'name': e.summary, 'rsvp': rsvp,
+                    'google': link, 'apple': icallink, 'other': icallink,
                     'date': date.replace(/^[^>]*"([^"]*)">.*/, '$1'),
                     'time': time.replace(/^[^>]*>([^<]*)[^[^;]*;([AP]M).*/, '$1$2') };
             }
