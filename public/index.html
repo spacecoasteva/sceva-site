@@ -22,7 +22,7 @@
 <body>
     <div class="content">
         <p class="banner chapter"><span><img class="logo" src="img/SCEVA_Green_White_Logo.png" width="553" height="208"/></span></p>
-        <p class="ticker" id="next_event"><span class="placeholder">Our next event is coming soon!</span><span class="next_info"><span id="next_info"></span><a href="" target="_blank" title="Add this event to your Google Calendar"><img src="img/calendar-add.png"></a></span></p>
+        <p class="ticker" id="next_event"><span class="placeholder">Our next event is coming soon!</span><span class="next_info"><span id="next_info"></span><button id="next_info_btn" class="event-add" title="RSVP for this event"><img src="img/calendar-add.png"></button></span></p>
         <p class="ticker"><span><span>See below for <a href="#calendar">more events</a> and <a href="#blog">news</a>!</span></span></p>
 
         <h2 class="centered">About Space Coast Electric Vehicle Association (SCEVA)</h2>
@@ -83,9 +83,11 @@
     <div id="eventModal" class="modal">
         <div class="modal-content">
             <span class="modal-close">&times;</span>
-            <p>Please let us know if you can join us for<br> 
-            the <span id="event-modal-name"></span> on <span id="event-modal-date"></span> at <span id="event-modal-time"></span><BR>
-            by clicking <a id="event-modal-rsvp" href="" target="_blank"><b>HERE</b></a>!</p>
+            <H2 align="center">Join Us!</H2>
+            <p><span id="event-modal-name"></span><BR>
+            <span id="event-modal-date"></span> at <span id="event-modal-time"></span></p>
+            <p>Please <a id="event-modal-rsvp" href="" target="_blank"><b>RSVP</b></a> to let us know if you can make it!</p>
+            <p><b>NOTE:</b> Your response, including your email address, will be publicly viewable.</p>
             <p class="addTo">Or copy to your <a id="event-modal-google" href="" target="_blank">Google Calendar</a>, <a id="event-modal-apple" href="" target="_blank">Apple Calendar</a>, or <a id="event-modal-other" href="" target="_blank">Other Calendar</a>.</p>
         </div>
     </div>

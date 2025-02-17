@@ -21,7 +21,7 @@ p.ticker > span { display: inline-flex; background: #FFFFFF; border-radius: 0.5e
 p.ticker > span.next_info { display: none; }
 p.ticker.live > span.placeholder { display: none; }
 p.ticker.live > span.next_info { display: inline-flex; position: relative; }
-p.ticker.live > span > a { position: absolute; bottom: -10px; right: -12px; }
+p.ticker.live > span > button { position: absolute; bottom: -10px; right: -12px; }
 p.ticker span span a { display: contents; color: #3333FF; }
 p.ticker:before, p.ticker:after { flex-grow: 1; content: ""; }
 p.ticker > span:before, p.ticker > span:after { width: 0.5em; min-width: 0.3em; content: ""; }
@@ -100,7 +100,7 @@ div.bg img { padding: 0; width: 60vw; min-width: 90px; max-width: 600px; }
 div.modal { display: none; position: fixed; z-index: 1;
     left: 0; top: 0; width: 100%; height: 100%; overflow: auto;
     background-color: rgb(0, 0, 0); background-color: rgba(0, 0, 0, 0.4); }
-div.modal-content { background-color: #fefefe; margin: 15% auto;
+div.modal-content { background-color: #fefefe; margin: auto; margin-top: 5%;
     padding: 20px; border: 1px solid #888; border-radius: 20px;
     width: 600px; max-width: 80%; color: black; text-shadow: none; }
 div.modal-content p { text-align: center; }
