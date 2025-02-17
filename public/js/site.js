@@ -120,7 +120,7 @@ function loadEvents(openModal) {
             var icallink = 'data:text/calendar,' + encodeURIComponent(ical[0]);
             var rsvp = e.description ? e.description.replace(/^(https:\/\/calendar.app.google\/[^\n]*).*|.*\n(https:\/\/calendar.app.google\/[^\n]*)\n.*|.*\n(https:\/\/calendar.app.google\/[^\n]*)$/s, '$1$2$3') : '';
             var link = start >= now ? (showICal ? icallink : gcal) : blog;
-            var linkTitle = link ? (start >= now ? (showICal ? ADD_ICAL_TITLE : ADD_GCAL_TITLE) : BLOG_LINK_TITLE) : '';
+            var linkTitle = link ? (start >= now ? 'RSVP for this event' : BLOG_LINK_TITLE) : '';
             var linkFile  = link && showICal ? ical[1] : '';
             var linkDown  = linkFile ? '" download="' + linkFile : '';
             var linkIcon  = link ? (start >= now ? 'calendar-add.png' : 'camera.png') : '';
@@ -143,7 +143,7 @@ function loadEvents(openModal) {
                 rows += newRow;
                 eventObjs[eventNum] = { 'name': e.summary, 'rsvp': rsvp,
                     'google': link, 'apple': icallink, 'other': icallink,
-                    'date': date.replace(/^[^>]*"([^"]*)">.*/, '$1'),
+                    'date': date.replace(/^[^>]*"(\w+)(\W+\w+\W+\d+)([^"]*)">.*/, '$1,$2,$3'),
                     'time': time.replace(/^[^>]*>([^<]*)[^[^;]*;([AP]M).*/, '$1$2') };
             }
             if (next_info == null && rows != '') {
@@ -171,7 +171,7 @@ function loadEvents(openModal) {
                 next_info.innerHTML = (pickOne(intros) + (isTBD ? wherewhens[0] : pickOne(wherewhens)) + pickOne(whattimes))
                         .replace('$d', date).replace('$v', venue)
                         .replace('$t', start.toLocaleTimeString(lang, etz).replace(/(:00)?:\d+ /, '').toLowerCase() + mtz);
-                next_info.nextElementSibling.setAttribute("href", link);
+                eventObjs['next_info_btn'] = eventObjs[eventNum];
                 if (linkFile) { next_info.nextElementSibling.setAttribute("download", linkFile); }
                 document.getElementById('next_event').classList.add('live');
             }
