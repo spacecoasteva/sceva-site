@@ -118,7 +118,8 @@ function loadEvents(openModal) {
             blog = blog && blog[0] ? blog[0] : '';
             var ical = makeICal(start, end, e.summary, e.description, e.location);
             var icallink = 'data:text/calendar,' + encodeURIComponent(ical[0]);
-            var rsvp = e.description ? e.description.replace(/^(https:\/\/calendar.app.google\/[^\n]*).*|.*\n(https:\/\/calendar.app.google\/[^\n]*)\n.*|.*\n(https:\/\/calendar.app.google\/[^\n]*)$/s, '$1$2$3') : '';
+            //var rsvp = e.description ? e.description.replace(/^(https:\/\/calendar.app.google\/[^\n]*).*|.*\n(https:\/\/calendar.app.google\/[^\n]*)\n.*|.*\n(https:\/\/calendar.app.google\/[^\n]*)$/s, '$1$2$3') : '';
+            var rsvp = 'https://docs.google.com/forms/d/e/1FAIpQLSd8EML_JoVaWcB5O9Wwk-iwaASqvhJ1rjEt2ixdlWf3xoywPQ/viewform?usp=pp_url&entry.960126064=' + start.toISOString().split('T')[0];
             var link = start >= now ? (showICal ? icallink : gcal) : blog;
             var linkTitle = link ? (start >= now ? 'RSVP for this event' : BLOG_LINK_TITLE) : '';
             var linkFile  = link && showICal ? ical[1] : '';
