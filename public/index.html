@@ -83,31 +83,46 @@
     <div id="eventModal" class="modal">
         <div class="modal-content">
             <span class="modal-close">&times;</span>
-            <H2 align="center">Join Us!</H2>
-            <p><span id="event-modal-name"></span><BR>
+            <h2 align="center">Join Us!</h2>
+            <p><b><span id="event-modal-name"></span></b><br/>
             <span id="event-modal-date"></span> at <span id="event-modal-time"></span></p>
             <p>Please let us know if you can join us and how many people will be coming!</p>
             <p><i>Providing your email allows you to come back and update your response.</i></p>
-            <iframe id="rsvpResponse" name="rsvpResponse" style="display: none;"></iframe>
-            <form action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSd8EML_JoVaWcB5O9Wwk-iwaASqvhJ1rjEt2ixdlWf3xoywPQ/formResponse" target="rsvpResponse" method="POST" id="rsvpForm">
-                <input type="hidden" id="event-modal-year" name="entry.960126064_year"/>
-                <input type="hidden" id="event-modal-month" name="entry.960126064_month"/>
-                <input type="hidden" id="event-modal-day" name="entry.960126064_day"/>
-                <input type="hidden" name="emailReceipt" value="true"/>
-                <input type="hidden" id="submissionTimestamp" name="submissionTimestamp" value="0"/>
-                <div>Email: <input type="email" autocomplete="on" name="emailAddress" value="Your email" required></div><br>
-                <div><span><label for="attendance">Attending?</label>
-                    <select id="attendance" name="entry.1251028816" required>
+            <form id="rsvpForm">
+                <input type="hidden" id="event-modal-eventid" name="eventid"/>
+                <div>
+                    <label for="emailAddress">Email:</label>
+                    <input type="email" autocomplete="on" name="emailAddress" placeholder="Your email address" required/>
+                </div>
+                <div>
+                    <label for="attendance">Attending?</label>
+                    <select id="attendance" name="attendance" required>
                       <option value="Yes">Yes</option>
                       <option value="Maybe">Maybe</option>
                       <option value="No">No</option>
-                    </select></span>
-                <span id="howMany">How many? <input type="number" name="entry.1793260650" value="1" min="0" max="100"></span></div><br>
-                <div><input type="submit" value="Submit"></div>
+                    </select>
+                    <span id="howMany">, <input type="number" id="people" name="people" value="1" min="0" max="100"/>
+                        <span class="single">person</span><span class="plural">people</span>.</span>
+                </div>
+                <div><button id="rsvpSubmit">Submit</button></div>
             </form>
-            <p class="addTo">Or copy to your <a id="event-modal-google" href="" target="_blank">Google Calendar</a>, <a id="event-modal-apple" href="" target="_blank">Apple Calendar</a>, or <a id="event-modal-other" href="" target="_blank">Other Calendar</a>.</p>
+            <p class="addTo">Copy to your <a id="event-modal-google" href="" target="_blank">Google Calendar</a>, <a id="event-modal-apple" href="" target="_blank">Apple Calendar</a>, or <a id="event-modal-other" href="" target="_blank">Other Calendar</a>.</p>
         </div>
     </div>
     <div style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 400%; background: #9e9e9e; mix-blend-mode: darken;"></div>
+    <script src="https://www.gstatic.com/firebasejs/11.4.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseApp = firebase.initializeApp({
+            apiKey: "AIzaSyBTInvICaImYYTmWtZb_6kDGpqAQ7Sb0-8",
+            authDomain: "sceva-site.firebaseapp.com",
+            projectId: "sceva-site",
+            storageBucket: "sceva-site.firebasestorage.app",
+            messagingSenderId: "423517906328",
+            appId: "1:423517906328:web:11c6f6e4ec093bd72a37ed",
+            measurementId: "G-PB2TCQ8TMP"
+        });
+        const firebaseDb = firebaseApp.firestore();
+    </script>
 </body>
 </html>

@@ -87,6 +87,7 @@ function loadEvents(openModal) {
     var min = '&timeMin=' + (new Date(Date.now() - 182 * 24 * 60 * 60 * 1000)).toISOString();
     var max = '&timeMax=' + (new Date(Date.now() + 62 * 24 * 60 * 60 * 1000)).toISOString();
     var showICal = false;//isiOS()
+    var popEventId = location.search.replace(/^.*[?&]eventid=([^&]*).*/i, '$1');
     loadGoogleApi(CAL_URL + CAL_ID + CAL_ARGS + min + max, function() {
         var eventsDiv = document.getElementById('events');
         var prevDiv = document.getElementById('prev-events');
@@ -148,7 +149,7 @@ function loadEvents(openModal) {
                     'google': link, 'apple': icallink, 'other': icallink,
                     'date': date.replace(/^[^>]*"(\w+)(\W+\w+\W+\d+)([^"]*)">.*/, '$1,$2,$3'),
                     'time': time.replace(/^[^>]*>([^<]*)[^[^;]*;([AP]M).*/, '$1$2'),
-                    'year': rsvpParts[0], 'month': rsvpParts[1], 'day': rsvpParts[2] };
+                    'eventid': rsvpDate.replaceAll('-', '') };
             }
             if (next_info == null && rows != '') {
                 var intros     = [ 'Please join us', 'Next SCEVA meeting is' ];
@@ -182,6 +183,7 @@ function loadEvents(openModal) {
         }
         eventsDiv.innerHTML = rows == '' ? 'No upcoming events.' : rows;
         prevDiv.innerHTML = prevRows == '' ? 'No previous events.' : prevRows;
+        var popEvent = null;
         for (var eventNum in eventObjs) {
             var eventBtn = document.getElementById(eventNum);
             eventBtn.onclick = (function(eventObj) {
@@ -190,22 +192,30 @@ function loadEvents(openModal) {
                     event.stopPropagation();
                 };
             })(eventObjs[eventNum]);
+            if (eventObjs[eventNum].eventid == popEventId) {
+                popEvent = eventNum;
+            }
         }
         document.body.addEventListener('click', toggleDetail);
+        if (popEvent) {
+            var event = document.getElementById(popEvent);
+            if (event) { event = event.closest('tr').nextElementSibling; }
+            if (event) { event.scrollIntoView({ block: 'end' }); }
+            openModal(eventObjs[popEvent]);
+        }
     });
 }
 
 function setupEventModal() {
     var howMany = document.getElementById('howMany');
+    var people = document.getElementById('people');
     var attendance = document.getElementById('attendance');
-    attendance.onchange = function() {
-        howMany.style.display = (attendance.value == 'No' ? 'none' : 'inline');
+    var styleHowMany = function() {
+        howMany.className = (attendance.value == 'No' ? 'none' : (people.value == 1 ? 'one' : 'more'));
     };
-    var rsvpForm = document.getElementById('rsvpForm');
-    var submissionTimestamp = document.getElementById('submissionTimestamp');
-    rsvpForm.onsubmit = function() {
-        submissionTimestamp.value = (new Date()).getTime();
-    };
+    attendance.onchange = styleHowMany;
+    people.onchange = styleHowMany;
+    styleHowMany();
 
     var modal = document.getElementById('eventModal');
     var close = document.getElementsByClassName('modal-close')[0];
@@ -224,10 +234,32 @@ function setupEventModal() {
     close.onclick = hideModal;
     window.onclick = function(event) {
         if (event.target == modal) { hideModal(); }
-    }
+    };
     window.onkeyup = function(event) {
         if (event.key == 'Escape' || event.key == 'Esc') { hideModal(); }
+    };
+
+    var rsvpForm = document.getElementById('rsvpForm');
+    rsvpForm.onsubmit = function(e) {
+        e.preventDefault();
+        return false;
     }
+    var rsvpSubmit = document.getElementById('rsvpSubmit');
+    rsvpSubmit.onclick = function() {
+        var now = new Date().getTime();
+        firebaseDb.collection('rsvps').add({
+            email: rsvpForm['emailAddress'].value,
+            eventId: rsvpForm['eventid'].value,
+            response: rsvpForm['attendance'].value,
+            people: parseInt(rsvpForm['people'].value),
+            timestamp: firebaseApp.firebase.firestore.FieldValue.serverTimestamp()
+            //timestamp: { seconds: Math.trunc(now / 1000), nanoseconds: (now % 1000) * 1000000 }
+        }).then((docRef) => {
+            console.log("Document written with ID: ", docRef.id);
+        }).catch((error) => {
+            console.error("Error adding document: ", error);
+        });
+    };
 
     return openModal;
 }
