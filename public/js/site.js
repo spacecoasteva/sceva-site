@@ -119,7 +119,8 @@ function loadEvents(openModal) {
             var ical = makeICal(start, end, e.summary, e.description, e.location);
             var icallink = 'data:text/calendar,' + encodeURIComponent(ical[0]);
             //var rsvp = e.description ? e.description.replace(/^(https:\/\/calendar.app.google\/[^\n]*).*|.*\n(https:\/\/calendar.app.google\/[^\n]*)\n.*|.*\n(https:\/\/calendar.app.google\/[^\n]*)$/s, '$1$2$3') : '';
-            var rsvp = 'https://docs.google.com/forms/d/e/1FAIpQLSd8EML_JoVaWcB5O9Wwk-iwaASqvhJ1rjEt2ixdlWf3xoywPQ/viewform?usp=pp_url&entry.960126064=' + start.toISOString().split('T')[0];
+            var rsvpDate = start.toISOString().split('T')[0];
+            var rsvp = 'https://docs.google.com/forms/d/e/1FAIpQLSd8EML_JoVaWcB5O9Wwk-iwaASqvhJ1rjEt2ixdlWf3xoywPQ/viewform?usp=pp_url&entry.960126064=' + rsvpDate;
             var link = start >= now ? (showICal ? icallink : gcal) : blog;
             var linkTitle = link ? (start >= now ? 'RSVP for this event' : BLOG_LINK_TITLE) : '';
             var linkFile  = link && showICal ? ical[1] : '';
@@ -142,10 +143,12 @@ function loadEvents(openModal) {
                 prevRows = newRow + prevRows;
             } else {
                 rows += newRow;
+                var rsvpParts = rsvpDate.split('-');
                 eventObjs[eventNum] = { 'name': e.summary, 'rsvp': rsvp,
                     'google': link, 'apple': icallink, 'other': icallink,
                     'date': date.replace(/^[^>]*"(\w+)(\W+\w+\W+\d+)([^"]*)">.*/, '$1,$2,$3'),
-                    'time': time.replace(/^[^>]*>([^<]*)[^[^;]*;([AP]M).*/, '$1$2') };
+                    'time': time.replace(/^[^>]*>([^<]*)[^[^;]*;([AP]M).*/, '$1$2'),
+                    'year': rsvpParts[0], 'month': rsvpParts[1], 'day': rsvpParts[2] };
             }
             if (next_info == null && rows != '') {
                 var intros     = [ 'Please join us', 'Next SCEVA meeting is' ];
@@ -193,6 +196,17 @@ function loadEvents(openModal) {
 }
 
 function setupEventModal() {
+    var howMany = document.getElementById('howMany');
+    var attendance = document.getElementById('attendance');
+    attendance.onchange = function() {
+        howMany.style.display = (attendance.value == 'No' ? 'none' : 'inline');
+    };
+    var rsvpForm = document.getElementById('rsvpForm');
+    var submissionTimestamp = document.getElementById('submissionTimestamp');
+    rsvpForm.onsubmit = function() {
+        submissionTimestamp.value = (new Date()).getTime();
+    };
+
     var modal = document.getElementById('eventModal');
     var close = document.getElementsByClassName('modal-close')[0];
     var openModal = function(eventObj) {
@@ -201,6 +215,7 @@ function setupEventModal() {
             if (element) {
                 if (element.nodeName == 'SPAN') { element.innerText = eventObj[eventProp]; }
                 else if (element.nodeName == 'A') { element.href = eventObj[eventProp]; }
+                else if (element.nodeName == 'INPUT') { element.value = eventObj[eventProp]; }
             }
         }
         modal.style.display = 'block';
@@ -213,6 +228,7 @@ function setupEventModal() {
     window.onkeyup = function(event) {
         if (event.key == 'Escape' || event.key == 'Esc') { hideModal(); }
     }
+
     return openModal;
 }
 

@@ -86,7 +86,25 @@
             <H2 align="center">Join Us!</H2>
             <p><span id="event-modal-name"></span><BR>
             <span id="event-modal-date"></span> at <span id="event-modal-time"></span></p>
-            <p>Please <a id="event-modal-rsvp" href="" target="_blank"><b>RSVP</b></a> to let us know if you can make it!</p>
+            <p>Please let us know if you can join us and how many people will be coming!</p>
+            <p><i>Providing your email allows you to come back and update your response.</i></p>
+            <iframe id="rsvpResponse" name="rsvpResponse" style="display: none;"></iframe>
+            <form action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSd8EML_JoVaWcB5O9Wwk-iwaASqvhJ1rjEt2ixdlWf3xoywPQ/formResponse" target="rsvpResponse" method="POST" id="rsvpForm">
+                <input type="hidden" id="event-modal-year" name="entry.960126064_year"/>
+                <input type="hidden" id="event-modal-month" name="entry.960126064_month"/>
+                <input type="hidden" id="event-modal-day" name="entry.960126064_day"/>
+                <input type="hidden" name="emailReceipt" value="true"/>
+                <input type="hidden" id="submissionTimestamp" name="submissionTimestamp" value="0"/>
+                <div>Email: <input type="email" autocomplete="on" name="emailAddress" value="Your email" required></div><br>
+                <div><span><label for="attendance">Attending?</label>
+                    <select id="attendance" name="entry.1251028816" required>
+                      <option value="Yes">Yes</option>
+                      <option value="Maybe">Maybe</option>
+                      <option value="No">No</option>
+                    </select></span>
+                <span id="howMany">How many? <input type="number" name="entry.1793260650" value="1" min="0" max="100"></span></div><br>
+                <div><input type="submit" value="Submit"></div>
+            </form>
             <p class="addTo">Or copy to your <a id="event-modal-google" href="" target="_blank">Google Calendar</a>, <a id="event-modal-apple" href="" target="_blank">Apple Calendar</a>, or <a id="event-modal-other" href="" target="_blank">Other Calendar</a>.</p>
         </div>
     </div>
