@@ -105,7 +105,8 @@ div.modal-content { background-color: #fefefe; margin: auto; margin-top: 5%;
     width: 600px; max-width: 80%; color: black; text-shadow: none; }
 div.modal-content p, div.modal-content form { text-align: center; }
 div.modal-content p.addTo { margin-top: 1.5em; }
-#howMany.none { display: none; }
+#rsvpForm div { margin-bottom: .5em; }
+#howMany.none { visibility: hidden; }
 #howMany.one  .plural { display: none; }
 #howMany.more .single { display: none; }
 span.modal-close {

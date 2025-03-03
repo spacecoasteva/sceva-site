@@ -87,7 +87,7 @@
             <p><b><span id="event-modal-name"></span></b><br/>
             <span id="event-modal-date"></span> at <span id="event-modal-time"></span></p>
             <p>Please let us know if you can join us and how many people will be coming!</p>
-            <p><i>Providing your email allows you to come back and update your response.</i></p>
+            <p><i>Providing your email allows you to update your response, here.</i></p>
             <form id="rsvpForm">
                 <input type="hidden" id="event-modal-eventid" name="eventid"/>
                 <div>
@@ -101,8 +101,10 @@
                       <option value="Maybe">Maybe</option>
                       <option value="No">No</option>
                     </select>
-                    <span id="howMany">, <input type="number" id="people" name="people" value="1" min="0" max="100"/>
-                        <span class="single">person</span><span class="plural">people</span>.</span>
+                </div>
+                <div id="howMany">
+                    <input type="number" id="people" name="people" value="1" min="0" max="100"/>
+                        <span class="single">person</span><span class="plural">people</span>
                 </div>
                 <div><button id="rsvpSubmit">Submit</button></div>
             </form>
