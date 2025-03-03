@@ -92,7 +92,7 @@
                 <input type="hidden" id="event-modal-eventid" name="eventid"/>
                 <div>
                     <label for="emailAddress">Email:</label>
-                    <input type="email" autocomplete="on" name="emailAddress" placeholder="Your email address" required/>
+                    <input type="email" autocomplete="on" id="emailAddress" name="emailAddress" placeholder="Your email address" required/>
                 </div>
                 <div>
                     <label for="attendance">Attending?</label>
@@ -103,7 +103,7 @@
                     </select>
                 </div>
                 <div id="howMany">
-                    <input type="number" id="people" name="people" value="1" min="0" max="100"/>
+                    <input type="number" id="people" name="people" value="1" min="1" max="100"/>
                         <span class="single">person</span><span class="plural">people</span>
                 </div>
                 <div><button id="rsvpSubmit">Submit</button></div>

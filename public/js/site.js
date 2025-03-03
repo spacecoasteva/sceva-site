@@ -192,7 +192,8 @@ function loadEvents(openModal) {
                     event.stopPropagation();
                 };
             })(eventObjs[eventNum]);
-            if (eventObjs[eventNum].eventid == popEventId) {
+            if (eventNum != 'next_info_btn' &&
+                eventObjs[eventNum].eventid == popEventId) {
                 popEvent = eventNum;
             }
         }
@@ -229,6 +230,8 @@ function setupEventModal() {
             }
         }
         modal.style.display = 'block';
+        var email = document.getElementById('emailAddress');
+        if (email) { email.focus(); }
     }
     var hideModal = function() { modal.style.display = 'none'; };
     close.onclick = hideModal;
