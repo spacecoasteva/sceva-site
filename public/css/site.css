@@ -109,6 +109,11 @@ div.modal-content p.addTo { margin-top: 1.5em; }
 #howMany.none { visibility: hidden; }
 #howMany.one  .plural { display: none; }
 #howMany.more .single { display: none; }
+#thankYouModal p { display: none; }
+#thankYouModal .resultError p.responseError,
+#thankYouModal .resultYes   p.responseYes,
+#thankYouModal .resultMaybe p.responseMaybe,
+#thankYouModal .resultNo    p.responseNo    { display: block; }
 span.modal-close {
     color: #aaa; float: right; font-size: 28px; font-weight: bold; }
 span.modal-close:hover, span.modal-close:focus {

@@ -220,6 +220,8 @@ function setupEventModal() {
 
     var modal = document.getElementById('eventModal');
     var close = document.getElementsByClassName('modal-close')[0];
+    var thankYouModal = document.getElementById('thankYouModal');
+    var thankYouClose = document.getElementsByClassName('modal-close')[1];
     var openModal = function(eventObj) {
         for (var eventProp in eventObj) {
             var element = document.getElementById('event-modal-' + eventProp);
@@ -233,13 +235,14 @@ function setupEventModal() {
         var email = document.getElementById('emailAddress');
         if (email) { email.focus(); }
     }
-    var hideModal = function() { modal.style.display = 'none'; };
-    close.onclick = hideModal;
+    var hideModal = function(theModal) { theModal.style.display = 'none'; };
+    close.onclick = function() { hideModal(modal); }
+    thankYouClose.onclick = function() { hideModal(thankYouModal); }
     window.onclick = function(event) {
-        if (event.target == modal) { hideModal(); }
+        if (event.target == modal || event.target == thankYouModal) { hideModal(event.target); }
     };
     window.onkeyup = function(event) {
-        if (event.key == 'Escape' || event.key == 'Esc') { hideModal(); }
+        if (event.key == 'Escape' || event.key == 'Esc') { hideModal(modal); hideModal(thankYouModal); }
     };
 
     var rsvpForm = document.getElementById('rsvpForm');
@@ -249,19 +252,24 @@ function setupEventModal() {
     }
     var rsvpSubmit = document.getElementById('rsvpSubmit');
     rsvpSubmit.onclick = function() {
-        var now = new Date().getTime();
+        if (!rsvpForm.reportValidity()) { return; }
+        var result = rsvpForm['attendance'].value;
         firebaseDb.collection('rsvps').add({
             email: rsvpForm['emailAddress'].value,
             eventId: rsvpForm['eventid'].value,
-            response: rsvpForm['attendance'].value,
+            response: result,
             people: parseInt(rsvpForm['people'].value),
+            comments: rsvpForm['comments'].value,
             timestamp: firebaseApp.firebase.firestore.FieldValue.serverTimestamp()
-            //timestamp: { seconds: Math.trunc(now / 1000), nanoseconds: (now % 1000) * 1000000 }
         }).then((docRef) => {
             console.log("Document written with ID: ", docRef.id);
         }).catch((error) => {
             console.error("Error adding document: ", error);
+            result = 'Error';
         });
+        hideModal(modal);
+        thankYouModal.firstElementChild.className = 'modal-content result' + result;
+        thankYouModal.style.display = 'block';
     };
 
     return openModal;
