@@ -222,14 +222,17 @@ function setupEventModal() {
     var close = document.getElementsByClassName('modal-close')[0];
     var thankYouModal = document.getElementById('thankYouModal');
     var thankYouClose = document.getElementsByClassName('modal-close')[1];
+    var fillElement = function(element, value) {
+        if (element) {
+            if (element.nodeName == 'SPAN') { element.innerText = value; }
+            else if (element.nodeName == 'A') { element.href = value; }
+            else if (element.nodeName == 'INPUT') { element.value = value; }
+        }
+    }
     var openModal = function(eventObj) {
         for (var eventProp in eventObj) {
-            var element = document.getElementById('event-modal-' + eventProp);
-            if (element) {
-                if (element.nodeName == 'SPAN') { element.innerText = eventObj[eventProp]; }
-                else if (element.nodeName == 'A') { element.href = eventObj[eventProp]; }
-                else if (element.nodeName == 'INPUT') { element.value = eventObj[eventProp]; }
-            }
+            fillElement(document.getElementById('event-modal-' + eventProp), eventObj[eventProp]);
+            fillElement(document.getElementById('event-thank-you-modal-' + eventProp), eventObj[eventProp]);
         }
         modal.style.display = 'block';
         var email = document.getElementById('emailAddress');
@@ -267,6 +270,7 @@ function setupEventModal() {
             console.error("Error adding document: ", error);
             result = 'Error';
         });
+        rsvpForm['comments'].value = '';
         hideModal(modal);
         thankYouModal.firstElementChild.className = 'modal-content result' + result;
         thankYouModal.style.display = 'block';
