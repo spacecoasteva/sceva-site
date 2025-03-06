@@ -109,6 +109,7 @@ div.modal-content p.addTo { margin-top: 1.5em; }
 #howMany.none { visibility: hidden; }
 #howMany.one  .plural { display: none; }
 #howMany.more .single { display: none; }
+#comments textarea { max-width: 100%; }
 #thankYouModal p { display: none; }
 #thankYouModal .resultError p.responseError,
 #thankYouModal .resultYes   p.responseYes,
