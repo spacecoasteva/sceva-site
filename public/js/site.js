@@ -87,6 +87,7 @@ function loadEvents(openModal) {
     var min = '&timeMin=' + (new Date(Date.now() - 182 * 24 * 60 * 60 * 1000)).toISOString();
     var max = '&timeMax=' + (new Date(Date.now() + 62 * 24 * 60 * 60 * 1000)).toISOString();
     var showICal = false;//isiOS()
+    var popEventId = location.search.replace(/^.*[?&]eventid=([^&]*).*/i, '$1');
     loadGoogleApi(CAL_URL + CAL_ID + CAL_ARGS + min + max, function() {
         var eventsDiv = document.getElementById('events');
         var prevDiv = document.getElementById('prev-events');
@@ -118,7 +119,9 @@ function loadEvents(openModal) {
             blog = blog && blog[0] ? blog[0] : '';
             var ical = makeICal(start, end, e.summary, e.description, e.location);
             var icallink = 'data:text/calendar,' + encodeURIComponent(ical[0]);
-            var rsvp = e.description ? e.description.replace(/^(https:\/\/calendar.app.google\/[^\n]*).*|.*\n(https:\/\/calendar.app.google\/[^\n]*)\n.*|.*\n(https:\/\/calendar.app.google\/[^\n]*)$/s, '$1$2$3') : '';
+            //var rsvp = e.description ? e.description.replace(/^(https:\/\/calendar.app.google\/[^\n]*).*|.*\n(https:\/\/calendar.app.google\/[^\n]*)\n.*|.*\n(https:\/\/calendar.app.google\/[^\n]*)$/s, '$1$2$3') : '';
+            var rsvpDate = start.toISOString().split('T')[0];
+            var rsvp = 'https://docs.google.com/forms/d/e/1FAIpQLSd8EML_JoVaWcB5O9Wwk-iwaASqvhJ1rjEt2ixdlWf3xoywPQ/viewform?usp=pp_url&entry.960126064=' + rsvpDate;
             var link = start >= now ? (showICal ? icallink : gcal) : blog;
             var linkTitle = link ? (start >= now ? 'RSVP for this event' : BLOG_LINK_TITLE) : '';
             var linkFile  = link && showICal ? ical[1] : '';
@@ -141,10 +144,12 @@ function loadEvents(openModal) {
                 prevRows = newRow + prevRows;
             } else {
                 rows += newRow;
+                var rsvpParts = rsvpDate.split('-');
                 eventObjs[eventNum] = { 'name': e.summary, 'rsvp': rsvp,
                     'google': link, 'apple': icallink, 'other': icallink,
                     'date': date.replace(/^[^>]*"(\w+)(\W+\w+\W+\d+)([^"]*)">.*/, '$1,$2,$3'),
-                    'time': time.replace(/^[^>]*>([^<]*)[^[^;]*;([AP]M).*/, '$1$2') };
+                    'time': time.replace(/^[^>]*>([^<]*)[^[^;]*;([AP]M).*/, '$1$2'),
+                    'eventid': rsvpDate.replaceAll('-', '') };
             }
             if (next_info == null && rows != '') {
                 var intros     = [ 'Please join us', 'Next SCEVA meeting is' ];
@@ -178,6 +183,7 @@ function loadEvents(openModal) {
         }
         eventsDiv.innerHTML = rows == '' ? 'No upcoming events.' : rows;
         prevDiv.innerHTML = prevRows == '' ? 'No previous events.' : prevRows;
+        var popEvent = null;
         for (var eventNum in eventObjs) {
             var eventBtn = document.getElementById(eventNum);
             eventBtn.onclick = (function(eventObj) {
@@ -186,32 +192,90 @@ function loadEvents(openModal) {
                     event.stopPropagation();
                 };
             })(eventObjs[eventNum]);
+            if (eventNum != 'next_info_btn' &&
+                eventObjs[eventNum].eventid == popEventId) {
+                popEvent = eventNum;
+            }
         }
         document.body.addEventListener('click', toggleDetail);
+        if (popEvent) {
+            var event = document.getElementById(popEvent);
+            if (event) { event = event.closest('tr').nextElementSibling; }
+            if (event) { event.scrollIntoView({ block: 'end' }); }
+            openModal(eventObjs[popEvent]);
+        }
     });
 }
 
 function setupEventModal() {
+    var howMany = document.getElementById('howMany');
+    var people = document.getElementById('people');
+    var attendance = document.getElementById('attendance');
+    var styleHowMany = function() {
+        howMany.className = (attendance.value == 'No' ? 'none' : (people.value == 1 ? 'one' : 'more'));
+    };
+    attendance.onchange = styleHowMany;
+    people.onchange = styleHowMany;
+    styleHowMany();
+
     var modal = document.getElementById('eventModal');
     var close = document.getElementsByClassName('modal-close')[0];
+    var thankYouModal = document.getElementById('thankYouModal');
+    var thankYouClose = document.getElementsByClassName('modal-close')[1];
+    var fillElement = function(element, value) {
+        if (element) {
+            if (element.nodeName == 'SPAN') { element.innerText = value; }
+            else if (element.nodeName == 'A') { element.href = value; }
+            else if (element.nodeName == 'INPUT') { element.value = value; }
+        }
+    }
     var openModal = function(eventObj) {
         for (var eventProp in eventObj) {
-            var element = document.getElementById('event-modal-' + eventProp);
-            if (element) {
-                if (element.nodeName == 'SPAN') { element.innerText = eventObj[eventProp]; }
-                else if (element.nodeName == 'A') { element.href = eventObj[eventProp]; }
-            }
+            fillElement(document.getElementById('event-modal-' + eventProp), eventObj[eventProp]);
+            fillElement(document.getElementById('event-thank-you-modal-' + eventProp), eventObj[eventProp]);
         }
         modal.style.display = 'block';
+        var email = document.getElementById('emailAddress');
+        if (email) { email.focus(); }
     }
-    var hideModal = function() { modal.style.display = 'none'; };
-    close.onclick = hideModal;
+    var hideModal = function(theModal) { theModal.style.display = 'none'; };
+    close.onclick = function() { hideModal(modal); }
+    thankYouClose.onclick = function() { hideModal(thankYouModal); }
     window.onclick = function(event) {
-        if (event.target == modal) { hideModal(); }
-    }
+        if (event.target == modal || event.target == thankYouModal) { hideModal(event.target); }
+    };
     window.onkeyup = function(event) {
-        if (event.key == 'Escape' || event.key == 'Esc') { hideModal(); }
+        if (event.key == 'Escape' || event.key == 'Esc') { hideModal(modal); hideModal(thankYouModal); }
+    };
+
+    var rsvpForm = document.getElementById('rsvpForm');
+    rsvpForm.onsubmit = function(e) {
+        e.preventDefault();
+        return false;
     }
+    var rsvpSubmit = document.getElementById('rsvpSubmit');
+    rsvpSubmit.onclick = function() {
+        if (!rsvpForm.reportValidity()) { return; }
+        var result = rsvpForm['attendance'].value;
+        firebaseDb.collection('rsvps').add({
+            email: rsvpForm['emailAddress'].value,
+            eventId: rsvpForm['eventid'].value,
+            response: result,
+            people: parseInt(rsvpForm['people'].value),
+            comments: rsvpForm['comments'].value,
+            timestamp: firebaseApp.firebase.firestore.FieldValue.serverTimestamp()
+        }).then((docRef) => {
+            console.log("Document written with ID: ", docRef.id);
+        }).catch((error) => {
+            console.error("Error adding document: ", error);
+            result = 'Error';
+        });
+        rsvpForm['comments'].value = '';
+        hideModal(modal);
+        thankYouModal.firstElementChild.className = 'modal-content result' + result;
+        thankYouModal.style.display = 'block';
+    };
+
     return openModal;
 }
 

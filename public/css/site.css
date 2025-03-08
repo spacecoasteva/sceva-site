@@ -103,8 +103,18 @@ div.modal { display: none; position: fixed; z-index: 1;
 div.modal-content { background-color: #fefefe; margin: auto; margin-top: 5%;
     padding: 20px; border: 1px solid #888; border-radius: 20px;
     width: 600px; max-width: 80%; color: black; text-shadow: none; }
-div.modal-content p { text-align: center; }
-div.modal-content p.addTo { margin-top: 2em; font-size: 75%; }
+div.modal-content p, div.modal-content form { text-align: center; }
+div.modal-content p.addTo { margin-top: 1.5em; }
+#rsvpForm div { margin-bottom: .5em; }
+#howMany.none { visibility: hidden; }
+#howMany.one  .plural { display: none; }
+#howMany.more .single { display: none; }
+#comments textarea { max-width: 100%; }
+#thankYouModal p { display: none; }
+#thankYouModal .resultError p.responseError,
+#thankYouModal .resultYes   p.responseYes,
+#thankYouModal .resultMaybe p.responseMaybe,
+#thankYouModal .resultNo    p.responseNo    { display: block; }
 span.modal-close {
     color: #aaa; float: right; font-size: 28px; font-weight: bold; }
 span.modal-close:hover, span.modal-close:focus {
