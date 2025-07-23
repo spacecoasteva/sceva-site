@@ -36,10 +36,10 @@ p.contact img { margin-top: 3px; }
 p.member { margin: 6px 0 3px 4em; text-indent: -3.5em; }
 p.member ~ p.member { margin-top: 0; }
 p.member span { display: inline-block; min-width: 7em; text-indent: 0; }
-.centered { text-align: center; text-wrap: balance; }
+.centered { text-align: center !important; text-wrap: balance; }
 .copyright { font-size: 80%; color: #999999; }
-#subscribe-form { margin-bottom: 16px; }
-#subscribe-form > p { margin-bottom: 8px; }
+#mc-embedded-subscribe-form { margin: 0 0 16px 0 !important; }
+#mc-embedded-subscribe-form > p { margin-bottom: 8px; }
 
 table { width: 100%; border-spacing: 0; }
 #events td, #prev-events td { vertical-align: top; padding-top: 0.3em; }
