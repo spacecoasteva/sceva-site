@@ -145,11 +145,11 @@ function loadEvents(openModal) {
             } else {
                 rows += newRow;
                 var rsvpParts = rsvpDate.split('-');
-                eventObjs[eventNum] = { 'name': e.summary, 'rsvp': rsvp,
-                    'google': link, 'apple': icallink, 'other': icallink,
+                eventObjs[eventNum] = { 'name': e.summary, 'rsvp': rsvp, 'location': e.location,
+                    'description': desc, 'google': link, 'apple': icallink, 'other': icallink,
+                    'eventid': rsvpDate.replaceAll('-', ''), 'start': start, 'end': end,
                     'date': date.replace(/^[^>]*"(\w+)(\W+\w+\W+\d+)([^"]*)">.*/, '$1,$2,$3'),
-                    'time': time.replace(/^[^>]*>([^<]*)[^[^;]*;([AP]M).*/, '$1$2'),
-                    'eventid': rsvpDate.replaceAll('-', '') };
+                    'time': time.replace(/^[^>]*>([^<]*)[^[^;]*;([AP]M).*/, '$1$2') };
             }
             if (next_info == null && rows != '') {
                 var intros     = [ 'Please join us', 'Next SCEVA meeting is' ];
@@ -218,6 +218,15 @@ function setupEventModal() {
     people.onchange = styleHowMany;
     styleHowMany();
 
+    nunjucks.configure({ autoescape: false })
+        .addFilter('datetime_format', function(value, format) {
+            return strftime(format, value);
+        }).addFilter('address_split', function(value, delim) {
+            return value.replace(/, *(?! *[A-Z][A-Z]\b)/g, delim);
+        });
+    var emailMessage = document.getElementById('email-message');
+    var scring = function(s, v) { return (new TextDecoder()).decode((new TextEncoder()).encode(s).map(c => c ^ v)); }
+
     var modal = document.getElementById('eventModal');
     var close = document.getElementsByClassName('modal-close')[0];
     var thankYouModal = document.getElementById('thankYouModal');
@@ -234,6 +243,7 @@ function setupEventModal() {
             fillElement(document.getElementById('event-modal-' + eventProp), eventObj[eventProp]);
             fillElement(document.getElementById('event-thank-you-modal-' + eventProp), eventObj[eventProp]);
         }
+        emailMessage.innerHTML = nunjucks.render('email', { event: eventObj });
         modal.style.display = 'block';
         var email = document.getElementById('emailAddress');
         if (email) { email.focus(); }
@@ -255,6 +265,12 @@ function setupEventModal() {
     }
     var rsvpSubmit = document.getElementById('rsvpSubmit');
     rsvpSubmit.onclick = function() {
+        if (rsvpForm['emailAddress'].value == '' &&
+            scring(rsvpForm['comments'].value, 0x30) == 'SXy]@')
+        {
+            rsvpForm['comments'].value = emailMessage.innerHTML;
+            return;
+        }
         if (!rsvpForm.reportValidity()) { return; }
         var result = rsvpForm['attendance'].value;
         firebaseDb.collection('rsvps').add({

@@ -28,6 +28,9 @@
     #mc_embed_signup div.mce_inline_error { background-color: transparent; }
 </style>
 <link rel="stylesheet" href="css/site.css"/>
+<script type="text/javascript" src="js/strftime-min.js"></script>
+<script type="text/javascript" src="js/nunjucks-slim.min.js"></script>
+<script type="text/javascript" src="js/templates.js"></script>
 <script type="text/javascript" src="js/site.js"></script>
 </head>
 <body>
@@ -133,6 +136,7 @@
                 <div><button id="rsvpSubmit">Submit</button></div>
             </form>
             <p class="addTo">Copy to your <a id="event-modal-google" href="" target="_blank">Google Calendar</a>, <a id="event-modal-apple" href="" target="_blank">Apple Calendar</a>, or <a id="event-modal-other" href="" target="_blank">Other Calendar</a>.</p>
+            <div id="email-message" style="display: none;"></div>
         </div>
     </div>
     <div id="thankYouModal" class="modal">
