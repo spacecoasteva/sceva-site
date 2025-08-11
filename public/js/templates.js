@@ -1,4 +1,4 @@
-(function() {(window.nunjucksPrecompiled = window.nunjucksPrecompiled || {})["email"] = (function() {
+(function() {(window.nunjucksPrecompiled = window.nunjucksPrecompiled || {})["subject"] = (function() {
 function root(env, context, frame, runtime, cb) {
 var lineno = 0;
 var colno = 0;
@@ -7,7 +7,33 @@ try {
 var parentTemplate = null;
 output += "Space Coast EVA ";
 output += runtime.suppressValue(env.getFilter("datetime_format").call(context, runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "event")),"start"),"%B"), env.opts.autoescape);
-output += " Meeting\n<p>SCEVA Members and Guests,</p>\n<p></p>\n<p>Our monthly meeting is ";
+output += " Meeting";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+;
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
+
+
+(function() {(window.nunjucksPrecompiled = window.nunjucksPrecompiled || {})["email"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = 0;
+var colno = 0;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<p>SCEVA Members and Guests,</p>\n<p></p>\n<p>Our monthly meeting is ";
 output += runtime.suppressValue(env.getFilter("datetime_format").call(context, runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "event")),"start"),"%A, %-m/%-d/%y at %-I:%M%p"), env.opts.autoescape);
 output += ".</p>\n<p></p>\n<h2>";
 output += runtime.suppressValue(runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "event")),"name"), env.opts.autoescape);

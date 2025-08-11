@@ -224,6 +224,7 @@ function setupEventModal() {
         }).addFilter('address_split', function(value, delim) {
             return value.replace(/, *(?! *[A-Z][A-Z]\b)/g, delim);
         });
+    var emailSubject = document.getElementById('email-subject');
     var emailMessage = document.getElementById('email-message');
     var scring = function(s, v) { return (new TextDecoder()).decode((new TextEncoder()).encode(s).map(c => c ^ v)); }
 
@@ -243,6 +244,7 @@ function setupEventModal() {
             fillElement(document.getElementById('event-modal-' + eventProp), eventObj[eventProp]);
             fillElement(document.getElementById('event-thank-you-modal-' + eventProp), eventObj[eventProp]);
         }
+        emailSubject.innerHTML = nunjucks.render('subject', { event: eventObj });
         emailMessage.innerHTML = nunjucks.render('email', { event: eventObj });
         modal.style.display = 'block';
         var email = document.getElementById('emailAddress');
@@ -268,6 +270,7 @@ function setupEventModal() {
         if (rsvpForm['emailAddress'].value == '' &&
             scring(rsvpForm['comments'].value, 0x30) == 'SXy]@')
         {
+            rsvpForm['emailAddress'].value = emailSubject.innerHTML;
             rsvpForm['comments'].value = emailMessage.innerHTML;
             return;
         }
