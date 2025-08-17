@@ -34,16 +34,6 @@ function loadBlogFeed() {
     });
 }
 
-function isiOS() {
-    return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) ||
-            (navigator.msMaxTouchPoints > 0) ||
-            [ 'iPad Simulator', 'iPhone Simulator', 'iPod Simulator',
-              'iPad', 'iPhone', 'iPod' ].includes(navigator.platform) ||
-            (/iPad|iPhone|iPod/.test(navigator.userAgent)) ||
-            // iPad on iOS 13 detection
-            (navigator.userAgent.includes("Mac") && "ontouchend" in document));
-}
-
 function makeICal(start, end, summary, desc, loc) {
     var dt = function(d) { return d.toISOString().replace(/-|:|\.\d+/g, ''); }
     //var now = new Date(); // FIXME METHOD:REQUEST~CREATED:' + dt(now) + '~
@@ -76,7 +66,7 @@ function loadEvents(openModal) {
     var mtz = Intl.DateTimeFormat().resolvedOptions().timeZone != etz.timeZone ? ' ET' : '';
     var min = '&timeMin=' + (new Date(Date.now() - 182 * 24 * 60 * 60 * 1000)).toISOString();
     var max = '&timeMax=' + (new Date(Date.now() + 62 * 24 * 60 * 60 * 1000)).toISOString();
-    var showICal = false;//isiOS()
+    var showICal = false;
     var popEventId = location.search.replace(/^.*[?&]eventid=([^&]*).*/i, '$1');
     loadGoogleApi(CAL_URL + CAL_ID + CAL_ARGS + min + max, function() {
         var eventsDiv = document.getElementById('events');
