@@ -9,6 +9,15 @@
 <body>
     <textarea rows="8" cols="100" name="templates" id="templates"></textarea>
     <div id="sources">
+        <div name="blog">
+            {% for post in posts -%}
+                <p><a href="{{post.url}}"><img src="{{post.images | first | blogger_resize(72)-}}
+                    "/></a><a href="{{post.url}}">{{post.title}}</a><br/>
+                    {{-post.content | strip_html_tags | trim | truncate(200, false, '&#x2026;')}}</p>
+            {%- else -%}
+                No blog posts.
+            {%- endfor %}
+        </div>
         <div name="subject">Space Coast EVA {{event.start | datetime_format("%B")}} Meeting</div>
         <div name="email">
 <p>SCEVA Members and Guests,</p>

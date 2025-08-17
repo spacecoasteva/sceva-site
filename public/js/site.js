@@ -30,17 +30,7 @@ function loadBlogFeed() {
     loadGoogleApi(BLOG_URL + BLOG_ID + BLOG_ARGS, function() {
         var postsDiv = document.getElementById('posts');
         var posts = JSON.parse(this.response).items;
-        var rows = '';
-        for (var i = 0; i < posts.length; i++) {
-            var post = posts[i];
-            var img_src = post.images.length ? post.images[0].url : '';
-            img_src = (img_src || '').replace(/\/[whs][0-9]+[-=,a-zA-F0-9]*\/([^\/]+)$/, '/w72-h72-p-k-no-nu/$1');
-            var summary = (post.content || '').replace(/<[^>]+>/g, ' ').replace(/[ \t\r\n]+/g, ' ').trim();
-            summary = summary.replace(/(.{180,200}[^ .]*) .*/, '$1\u2026');
-            rows += '<p><a href="' + post.url + '"><img src="' + img_src + '"/></a>' +
-                       '<a href="' + post.url + '">' + post.title + '</a><br/>' + summary + '</p>'
-        }
-        postsDiv.innerHTML = rows == '' ? 'No blog posts.' : rows;
+        postsDiv.innerHTML = nunjucks.render('blog', { posts: posts })
     });
 }
 
@@ -207,6 +197,23 @@ function loadEvents(openModal) {
     });
 }
 
+function setupTemplates() {
+    nunjucks.configure({ autoescape: false })
+        .addFilter('datetime_format', function(value, format) {
+            return strftime(format, value);
+        }).addFilter('address_split', function(value, delim) {
+            return value.replace(/, *(?! *[A-Z][A-Z]\b)/g, delim);
+        }).addFilter('strip_html_tags', function(value) {
+            var text = null, textOf = function(n) {
+                return n.nodeType == n.TEXT_NODE ? n.textContent : (n.nodeType == n.ELEMENT_NODE ? text(n) : ''); };
+            text = function(node) { return Array.from(node.childNodes).map(textOf).join(' '); };
+            return text(new DOMParser().parseFromString(value, 'text/html').body)
+                .replace(/[ \t\r\n]+/g, ' ').trim();
+        }).addFilter('blogger_resize', function(value, w, h = null) {
+            return value.url.replace(/\/[whs][0-9]+[-=,a-zA-F0-9]*\/([^\/]+)$/, `/w${w}-h${h || w}-p-k-no-nu/$1`);
+        });
+}
+
 function setupEventModal() {
     var howMany = document.getElementById('howMany');
     var people = document.getElementById('people');
@@ -218,12 +225,6 @@ function setupEventModal() {
     people.onchange = styleHowMany;
     styleHowMany();
 
-    nunjucks.configure({ autoescape: false })
-        .addFilter('datetime_format', function(value, format) {
-            return strftime(format, value);
-        }).addFilter('address_split', function(value, delim) {
-            return value.replace(/, *(?! *[A-Z][A-Z]\b)/g, delim);
-        });
     var emailSubject = document.getElementById('email-subject');
     var emailMessage = document.getElementById('email-message');
     var scring = function(s, v) { return (new TextDecoder()).decode((new TextEncoder()).encode(s).map(c => c ^ v)); }
@@ -299,6 +300,7 @@ function setupEventModal() {
 }
 
 function loadContent() {
+    setupTemplates();
     loadEvents(setupEventModal());
     loadBlogFeed();
 }
