@@ -71,7 +71,8 @@ function loadEvents(openModal) {
                 eventObj.end = new Date(eventObj.end);
                 eventObjs[eventNum] = eventObj;
             }
-            if (next_info == null && rows != '') {
+            var notNext = (e.description || '').match(/{#notnext}/);
+            if (next_info == null && rows != '' && !notNext) {
                 next_info = document.getElementById('next_info');
                 next_info.innerHTML = nunjucks.render('next_info', { event: e, tz: tz });
                 eventObjs['next_info_btn'] = eventObjs[eventNum];
