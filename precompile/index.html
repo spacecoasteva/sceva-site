@@ -9,34 +9,138 @@
 <body>
     <textarea rows="8" cols="100" name="templates" id="templates"></textarea>
     <div id="sources">
-        <div name="blog">
+        <div class="template" name="desc">
+            <!--
+            {{-(event.description or '').replace(r/ *{[^}]*}/, '')
+                .replaceAll(r/^https:\/\/calendar.app.google\/.*\n?|\nhttps:\/\/calendar.app.google\/.*\n|\nhttps:\/\/calendar.app.google\/.*$/g, '')
+                .replaceAll(r/(?:<u>( *<a)|(<\/a> *)<\/u>)/g, "$1$2")-}}
+            -->
+        </div>
+        <div class="template" name="gcal">
+            <!--
+            {%- set desc %}{% include 'desc' %}{% endset -%}
+            https://www.google.com/calendar/render?action=TEMPLATE&sf=true&output=xml&sprop=website:spacecoasteva.club&text=
+            {{-event.summary | urlencode}}&dates={{event.start | calendarDate | datetimeFormat('%Y%m%dT%H%M%SZ', 0)-}}
+                /{{event.end | calendarDate | datetimeFormat('%Y%m%dT%H%M%SZ', 0)-}}
+                {% if desc %}&details={{desc | urlencode}}{% endif -%}
+                {% if event.location %}&location={{event.location | urlencode}}{% endif -%}
+            -->
+        </div><!--var now = new Date(); // FIXME METHOD:REQUEST~CREATED:' + dt(now) + '~-->
+        <div class="template" name="ical">
+            <!--
+            {%- macro dt(date, format='%Y%m%dT%H%M%SZ') %}{{date | calendarDate | datetimeFormat(format, 0)}}{% endmacro -%}
+            {%- set domain = 'spacecoasteva.club' %}{% set email = 'news@' + domain -%}
+            {%- set start = dt(event.start) %}{% set end = dt(event.end) %}{% set loc = event.location -%}
+            {%- set data -%}BEGIN:VCALENDAR~VERSION:2.0~PRODID:-//SCEVA//Events//EN~BEGIN:VEVENT~UID:
+                {{-start}}@{{domain}}~DTSTAMP:{{start}}~DTSTART:
+                {{-start}}~DTEND:{{end}}~SUMMARY:{{event.summary}}
+                {%- if event.description %}~DESCRIPTION:{{event.description}}{% endif -%}
+                {%- if loc %}~LOCATION:{{loc}}{% if loc.indexOf(',') > 0 -%}
+                    ~STREET-ADDRESS:{{loc.split(',')[1].trim()}}{% endif %}{% endif -%}
+                ~ORGANIZER;CN="SCEVA":mailto:{{email}}~ATTENDEE;RSVP=FALSE:~END:VEVENT~END:VCALENDAR~{%- endset -%}
+            {{data.replaceAll('~', '\r\n')-}}
+            -->
+        </div>
+        <div class="template" name="blog">
+            <!--
+            {%- set desc %}{% include 'desc' %}{% endset -%}
+            {%- set blog = desc.match(r/(\bhttps?:\/\/blog.spacecoasteva.club\/[^\]})<>'" \t]*)/) -%}
+            {%- if blog and blog[0] %}{{blog[0]}}{% endif -%}
+            -->
+        </div>
+        <div class="template" name="eventObj">
+            <!--
+            {%- set desc %}{% include 'desc' %}{% endset -%}
+            {%- set gcal %}{% include 'gcal' %}{% endset -%}
+            {%- set ical %}{% include 'ical' %}{% endset -%}
+            {%- set icallink = 'data:text/calendar,' + (ical | urlencode) -%}
+            {{ { name: event.summary, location: event.location, description: desc,
+                 google: gcal, apple: icallink, other: icallink,
+                 start: event.start | calendarDate, end: event.end | calendarDate,
+                 eventid: event.start | calendarDate | datetimeFormat('%Y%m%d'),
+                 date: event.start | calendarDate | datetimeFormat('%a, %b %-d, %Y'),
+                 time: event.start | calendarDate | datetimeFormat('%-I:%M %p' + tz) } | dump }}
+            -->
+        </div>
+        <table>
+            <tbody class="template" name="event">
+                <!--
+                {%- macro startFormat(format='%a %b %-d %Y') %}{{event.start | calendarDate | datetimeFormat(format)}}{% endmacro -%}
+                {%- macro endFormat(format='%a %b %-d %Y') %}{{event.end | calendarDate | datetimeFormat(format)}}{% endmacro -%}
+                {%- set desc %}{% include 'desc' %}{% endset -%}
+                {%- set gcal %}{% include 'gcal' %}{% endset -%}
+                {%- set blog %}{% include 'blog' %}{% endset -%}
+                {%- set linkTitle = ('RSVP for this event' if gcal) if isCurrent else
+                    ('See pictures and description from this event' if blog) -%}
+                {%- set linkIcon = ('calendar-add.png' if gcal) if isCurrent else ('camera.png' if blog) -%}
+                {%- set linkImg -%}
+                    {%- if isCurrent and gcal %}<button id="{{eventNum}}" class="event-add"><img src="img/{{linkIcon}}"/></button>
+                    {%- elif not isCurrent and blog %}<a href="{{blog}}" target="_blank"><img src="img/{{linkIcon}}"/></a>{% endif -%}
+                {%- endset -%}
+                {%- set detailLoc -%}
+                    {%- if event.location and (event | isTBD) -%}
+                        {{event.location}}
+                    {%- elif event.location -%}
+                        <a title="Map" target="_blank" href="https://maps.google.com/maps?q=
+                            {{-event.location | urlencode}}">{{event.location}}<img class="map" src="img/map.png"/></a>
+                    {%- endif %}
+                {%- endset -%}-->
+                <tr class="event {% if event.start | calendarBefore(-6) or (event | isTBD) %}summary{% else %}details{% endif %}">{# : -#}
+                    <td class="event-date" title="{{startFormat()}}">{{startFormat('%a')}} <span class="long">
+                        {{-startFormat('%b&nbsp;%-d')}}</span><span class="short">{{startFormat("%-m/%-d")}}</span></td>{# : -#}
+                    <td class="event-time">{{startFormat("%-I:%M")}}<span class="long">{{startFormat("&nbsp;%p")-}}
+                        </span><span class="short">{{startFormat("%p") | replace("M", "")}}</span>
+                        {{-endFormat("&nbsp;- %-I:%M")}}<span class="long">{{endFormat("&nbsp;%p")-}}
+                        </span><span class="short">{{endFormat("%p") | replace("M", "")}}</span></td>{# : -#}
+                    <td class="event-text" title="{{event.location or desc or event.summary-}}
+                        "><span></span>{{event.summary}}</td>{# : -#}
+                    <td class="event-link" title="{{linkTitle}}">{{linkImg}}</td></tr>{% if desc or detailLoc %}
+                <tr class="event-detail"><td colspan="4"><div>{{desc}}
+                    {%- if desc and detailLoc %}<hr/>{% endif %}{{detailLoc}}</div></td></tr>{% endif %}
+            </tbody>
+        </table>
+        <div class="template" name="next_info">
+            {%- set blurb -%}
+                {{-[ 'Please join us', 'Next SCEVA meeting is' ] | random}}
+                {%- if (event | isTBD) %} on $d, location to be announced. 
+                {%- else %}{{[ ' on $d$v. ', '$v on $d. ' ] | random}}{% endif -%}
+                {{-[ 'Meeting starts at $t!', 'We\'ll see you at $t!' ] | random}}
+            {%- endset -%}
+            {{blurb | replace('$d', event.start | calendarDate | datetimeFormat(
+                        [ '%a, %B %o', '%B %o (%a)', '%A, %B %o', '%B %o (%A)' ] | random))
+                    | replace('$t', event.start | calendarDate | datetimeFormat(
+                        '%-I:%M&nbsp;%p' + tz) | replace(':00', ''))
+                    | replace('$v', (event.summary | summaryVenue) if not event.location else
+                                    [ ' at $v in $c', ' at $c\'s $v' ] | random | venueSubstitute(event))-}}
+        </div>
+        <div class="template" name="blogs">
             {% for post in posts -%}
-                <p><a href="{{post.url}}"><img src="{{post.images | first | blogger_resize(72)-}}
+                <p><a href="{{post.url}}"><img src="{{post.images | first | bloggerResize(72)-}}
                     "/></a><a href="{{post.url}}">{{post.title}}</a><br/>
-                    {{-post.content | strip_html_tags | trim | truncate(200, false, '&#x2026;')}}</p>
+                    {{-post.content | stripHtmlTags | trim | truncate(200, false, '&#x2026;')}}</p>
             {%- else -%}
                 No blog posts.
             {%- endfor %}
         </div>
-        <div name="subject">Space Coast EVA {{event.start | datetime_format("%B")}} Meeting</div>
-        <div name="email">
+        <div class="template" name="subject">Space Coast EVA {{event.start | datetimeFormat("%B")}} Meeting</div>
+        <div class="template" name="email">
 <p>SCEVA Members and Guests,</p>
 <p></p>
-<p>Our monthly meeting is {{event.start | datetime_format("%A, %-m/%-d/%y at %-I:%M%p")}}.</p>
+<p>Our monthly meeting is {{event.start | datetimeFormat("%A, %-m/%-d/%y at %-I:%M %p")}}.</p>
 <p></p>
 <h2>{{event.name}}</h2>
 <p></p>
-<p>{{event.start | datetime_format("%B %-d, %Y, %-I:%M%p")}} — {{event.end | datetime_format("%-I:%M%p")}}</p>
+<p>{{event.start | datetimeFormat("%B %-d, %Y, %-I:%M %p")}} — {{event.end | datetimeFormat("%-I:%M %p")}}</p>
 <p></p>
 <h3>Location:</h3>
-<p>{{event.location | address_split("<br>")}}</p>
+<p>{{event.location | addressSplit("<br>")}}</p>
 <p><a href="https://maps.google.com/maps?q=%7B%7B&amp;s=event.location%20%7C%20urlencode&amp;e=%7D%7D" target="_blank" tabindex="-1">MAP</a></p>
 <p></p>
 <h3>Description:</h3>
 <p>{{event.description}}</p>
 <p></p>
 <h3>RSVP:</h3>
-<p><a href="https://spacecoasteva.club/?eventid=%7B%7B&amp;s=event.start%20%7C%20datetime_format(%22%25Y%25m%25d%22)&amp;e=%7D%7D" target="_blank" tabindex="-1"><em>Let us know if you can join us and add this event to your calendar!</em></a></p>
+<p><a href="https://spacecoasteva.club/?eventid=%7B%7B&amp;s=event.start%20%7C%20datetimeFormat(%22%25Y%25m%25d%22)&amp;e=%7D%7D" target="_blank" tabindex="-1"><em>Let us know if you can join us and add this event to your calendar!</em></a></p>
 <p></p>
 <p></p>
 <p>Bob Hathaway<br>President, Space Coast EVA</p>
@@ -47,13 +151,13 @@
     <script>
         (function(textarea, sources) {
             var precomp = function(elem) {
-                var source = elem.innerHTML.trim().replace(/%7B%7B&amp;s=([^&]+)&amp;e=%7D%7D/g,
-                    function(m, e) { return '{{' + decodeURIComponent(e) + '}}'; });
+                var source = elem.innerHTML.replace(/%7B%7B&amp;s=([^&]+)&amp;e=%7D%7D/g,
+                        function(m, e) { return '{{' + decodeURIComponent(e) + '}}'; })
+                    .replace(/<!--\s*({[{%].*?)-->/sg, '$1').trim();
                 return nunjucks.precompileString(source, { name: elem.getAttribute('name') }); };
-            textarea.value = Array.from(sources.childNodes).filter(function(n) {
-                return n.nodeType == 1 && n.nodeName == 'DIV' }).map(precomp).join('\n\n');
+            textarea.value = Array.from(sources.getElementsByClassName('template')).map(precomp).join('');
+            textarea.focus();
         })(document.getElementById('templates'), document.getElementById('sources'));
-        // function(s) { return s.id + ': ' + s.innerHTML.trim().substr(0, 80) }
     </script>
 </body>
 </html>
