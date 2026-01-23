@@ -102,7 +102,7 @@
         <div class="template" name="next_info">
             {%- set blurb -%}
                 {{-[ 'Please join us', 'Next SCEVA meeting is' ] | random}}
-                {%- if (event | isTBD) %} on $d, location to be announced. 
+                {%- if (event | isTBD) %}{{ ' on $d, location to be announced. ' }}
                 {%- else %}{{[ ' on $d$v. ', '$v on $d. ' ] | random}}{% endif -%}
                 {{-[ 'Meeting starts at $t!', 'We\'ll see you at $t!' ] | random}}
             {%- endset -%}
