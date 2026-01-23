@@ -716,7 +716,7 @@ t_1 = (function() {
 var output = "";
 output += runtime.suppressValue(env.getFilter("random").call(context, ["Please join us","Next SCEVA meeting is"]), env.opts.autoescape);
 if((env.getFilter("isTBD").call(context, runtime.contextOrFrameLookup(context, frame, "event")))) {
-output += " on $d, location to be announced.";
+output += runtime.suppressValue(" on $d, location to be announced. ", env.opts.autoescape);
 ;
 }
 else {
