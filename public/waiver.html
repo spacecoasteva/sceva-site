@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ride and Drive Waiver - Space Coast Electric Vehicle Association</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="apple-touch-icon" sizes="57x57" type="image/png" href="img/sceva_logo57.png"/>
+<link rel="apple-touch-icon" sizes="76x76" type="image/png" href="img/sceva_logo76.png"/>
+<link rel="apple-touch-icon" sizes="120x120" type="image/png" href="img/sceva_logo120.png"/>
+<link rel="apple-touch-icon" sizes="152x152" type="image/png" href="img/sceva_logo152.png"/>
+<link rel="apple-touch-icon" sizes="167x167" type="image/png" href="img/sceva_logo167.png"/>
+<link rel="apple-touch-icon" sizes="180x180" type="image/png" href="img/sceva_logo180.png"/>
+<link rel="icon" sizes="192x192" type="image/png" href="img/sceva_logo192.png"/>
+<link rel="icon" sizes="128x128" type="image/png" href="img/sceva_logo128.png"/>
+<link rel="icon" sizes="96x96" type="image/png" href="img/sceva_logo96.png"/>
+<link rel="icon" sizes="32x32" type="image/png" href="img/sceva_logo32.png"/>
+<link rel="icon" sizes="16x16" type="image/png" href="img/sceva_logo16.png"/>
+<link rel="stylesheet" href="css/site.css"/>
+<style type="text/css">
+    html { height: 100.1vh; }
+    .content { font-size: 250%; --pad: 20px; }
+    p.banner { margin-top: var(--pad); }
+    #reset { cursor: pointer; }
+    #waiver { position: fixed; --top: calc(2em + 2 * var(--pad)); top: var(--top); left: var(--pad);
+        width: min(760px, 100vw - 2 * var(--pad)); height: calc(100% - var(--top) - var(--pad)); }
+</style>
+<script>
+    window.addEventListener('load', function() {
+        document.getElementById('reset').addEventListener('click', function() {
+            document.getElementById('waiver').src += '';
+        });
+    });
+</script>
+</head>
+<body>
+    <div class="content">
+        <p class="banner"><span id="reset">Reset</span></p>
+        <iframe id="waiver" src="https://form.jotform.com/230927726768167?stateOf=Florida"></iframe>
+    </div>
+</body>
+</html>
