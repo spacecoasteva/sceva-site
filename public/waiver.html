@@ -17,10 +17,11 @@
 <link rel="icon" sizes="16x16" type="image/png" href="img/sceva_logo16.png"/>
 <link rel="stylesheet" href="css/site.css"/>
 <style type="text/css">
-    .content { font-size: 250%; }
+    .content { font-size: 250%; --pad: 20px; }
+    p.banner { margin-top: var(--pad); }
     #reset { cursor: pointer; }
-    #waiver { position: fixed; top: calc(2em + 50px); left: 20px;
-        width: min(760px, 100vw - 40px); height: calc(100vh - 2em - 70px); }
+    #waiver { position: fixed; --top: calc(2em + 2 * var(--pad)); top: var(--top); left: var(--pad);
+        width: min(760px, 100vw - 2 * var(--pad)); height: calc(100% - var(--top) - var(--pad)); }
 </style>
 <script>
     window.addEventListener('load', function() {
