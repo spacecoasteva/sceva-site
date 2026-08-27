@@ -762,7 +762,7 @@ var parentTemplate = null;
 output += "<a href=\"";
 output += runtime.suppressValue(runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "post")),"url"), env.opts.autoescape);
 output += "\"><img src=\"";
-output += runtime.suppressValue(env.getFilter("bloggerResize").call(context, env.getFilter("first").call(context, runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "post")),"images")),72), env.opts.autoescape);
+output += runtime.suppressValue(env.getFilter("bloggerResize").call(context, env.getFilter("first").call(context, runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "post")),"images")),144), env.opts.autoescape);
 output += "\"></a><a href=\"";
 output += runtime.suppressValue(runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "post")),"url"), env.opts.autoescape);
 output += "\">";
