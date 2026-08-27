@@ -113,14 +113,13 @@
                     | replace('$v', (event.summary | summaryVenue) if not event.location else
                                     [ ' at $v in $c', ' at $c\'s $v' ] | random | venueSubstitute(event))-}}
         </div>
+        <div class="template" name="blogpost">
+            <a href="{{post.url}}"><img src="{{post.images | first | bloggerResize(72)-}}
+                "/></a><a href="{{post.url}}">{{post.title}}</a><br/>
+                <span>{{-post.content | stripHtmlTags | trim | truncate(200, false, '&#x2026;')}}</span>
+        </div>
         <div class="template" name="blogs">
-            {% for post in posts -%}
-                <p><a href="{{post.url}}"><img src="{{post.images | first | bloggerResize(72)-}}
-                    "/></a><a href="{{post.url}}">{{post.title}}</a><br/>
-                    {{-post.content | stripHtmlTags | trim | truncate(200, false, '&#x2026;')}}</p>
-            {%- else -%}
-                No blog posts.
-            {%- endfor %}
+            {% for post in posts %}<p>{% include 'blogpost' %}</p>{% else %}No blog posts.{% endfor %}
         </div>
         <div class="template" name="subject">Space Coast EVA {{event.start | datetimeFormat("%B")}} Meeting</div>
         <div class="template" name="email">

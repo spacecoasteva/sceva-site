@@ -37,6 +37,12 @@ function loadBlogFeed() {
         var postsDiv = document.getElementById('posts');
         var posts = JSON.parse(this.response).items;
         postsDiv.innerHTML = nunjucks.render('blogs', { posts: posts });
+        var feature = posts.find(p => p.labels.includes("Feature"));
+        if (feature) {
+            var featured = document.getElementById('featured');
+            featured.innerHTML = nunjucks.render('blogpost', { post: feature });
+            featured.closest('p').classList.add('live');
+        }
     });
 }
 

@@ -752,6 +752,40 @@ root: root
 
 })();
 })();
+(function() {(window.nunjucksPrecompiled = window.nunjucksPrecompiled || {})["blogpost"] = (function() {
+function root(env, context, frame, runtime, cb) {
+var lineno = 0;
+var colno = 0;
+var output = "";
+try {
+var parentTemplate = null;
+output += "<a href=\"";
+output += runtime.suppressValue(runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "post")),"url"), env.opts.autoescape);
+output += "\"><img src=\"";
+output += runtime.suppressValue(env.getFilter("bloggerResize").call(context, env.getFilter("first").call(context, runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "post")),"images")),72), env.opts.autoescape);
+output += "\"></a><a href=\"";
+output += runtime.suppressValue(runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "post")),"url"), env.opts.autoescape);
+output += "\">";
+output += runtime.suppressValue(runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "post")),"title"), env.opts.autoescape);
+output += "</a><br>\n                <span>";
+output += runtime.suppressValue(env.getFilter("truncate").call(context, env.getFilter("trim").call(context, env.getFilter("stripHtmlTags").call(context, runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "post")),"content"))),200,false,"…"), env.opts.autoescape);
+output += "</span>";
+if(parentTemplate) {
+parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
+} else {
+cb(null, output);
+}
+;
+} catch (e) {
+  cb(runtime.handleError(e, lineno, colno));
+}
+}
+return {
+root: root
+};
+
+})();
+})();
 (function() {(window.nunjucksPrecompiled = window.nunjucksPrecompiled || {})["blogs"] = (function() {
 function root(env, context, frame, runtime, cb) {
 var lineno = 0;
@@ -773,18 +807,28 @@ frame.set("loop.revindex0", t_2 - t_1 - 1);
 frame.set("loop.first", t_1 === 0);
 frame.set("loop.last", t_1 === t_2 - 1);
 frame.set("loop.length", t_2);
-output += "<p><a href=\"";
-output += runtime.suppressValue(runtime.memberLookup((t_4),"url"), env.opts.autoescape);
-output += "\"><img src=\"";
-output += runtime.suppressValue(env.getFilter("bloggerResize").call(context, env.getFilter("first").call(context, runtime.memberLookup((t_4),"images")),72), env.opts.autoescape);
-output += "\"></a><a href=\"";
-output += runtime.suppressValue(runtime.memberLookup((t_4),"url"), env.opts.autoescape);
-output += "\">";
-output += runtime.suppressValue(runtime.memberLookup((t_4),"title"), env.opts.autoescape);
-output += "</a><br>";
-output += runtime.suppressValue(env.getFilter("truncate").call(context, env.getFilter("trim").call(context, env.getFilter("stripHtmlTags").call(context, runtime.memberLookup((t_4),"content"))),200,false,"…"), env.opts.autoescape);
+output += "<p>";
+var tasks = [];
+tasks.push(
+function(callback) {
+env.getTemplate("blogpost", false, "blogs", false, function(t_6,t_5) {
+if(t_6) { cb(t_6); return; }
+callback(null,t_5);});
+});
+tasks.push(
+function(template, callback){
+template.render(context.getVariables(), frame, function(t_8,t_7) {
+if(t_8) { cb(t_8); return; }
+callback(null,t_7);});
+});
+tasks.push(
+function(result, callback){
+output += result;
+callback(null);
+});
+env.waterfall(tasks, function(){
 output += "</p>";
-;
+});
 }
 }
 if (!t_2) {
