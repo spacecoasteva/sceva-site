@@ -19,6 +19,14 @@ p.ticker { display: flex; clear: both; margin: 10px 0 0 0; text-shadow: none;
 p.ticker > span { display: inline-flex; background: #FFFFFF; border-radius: 0.5em;
                   color: #000000; font-weight: bold; padding: 0.15em 0; min-width: 0; max-width: 20em; }
 p.ticker > span.next_info { display: none; }
+p.ticker.featured { display: none; }
+p.ticker.featured.live { display: flex; }
+p.ticker.featured > span.next_info { max-width: 30em; }
+#featured { display: inline-block; margin-left: 118px; position: relative; min-height: 118px; }
+#featured img { width: 108px; height: 108px; border-radius: 15px;
+    position: absolute; left: -118px; top: 5px; margin: 0; }
+#featured > span { font-size: 0.9em; font-weight: normal; }
+p.ticker span.title { font-size: 1.2em; vertical-align: middle; }
 p.ticker.live > span.placeholder { display: none; }
 p.ticker.live > span.next_info { display: inline-flex; position: relative; }
 p.ticker.live > span > button { position: absolute; bottom: -10px; right: -12px; }
@@ -30,6 +38,7 @@ p.chapter { margin-top: 10px; }
 img { margin-top: 10px; }
 img.map { margin: 0; width: 32px; padding-left: 2px; }
 img.logo { max-width: 90%; height: auto; margin-bottom: 10px; }
+img.logoelement { width: 36px; height: 36px; margin-bottom: 10px; vertical-align: middle; }
 p.contact { clear: right; float: right; text-align: right; margin: 0 0 0 15px; }
 p.contact img { margin-top: 3px; }
 @media (max-width: 28em) { p.contact span { display: none; } }

@@ -7,9 +7,11 @@ managed via the spacecoasteva@gmail.com Google account.  Additional details
 about this site and other elements of the club's online presence can be found
 in a Google Drive document called [SCEVA Internet Presence](https://docs.google.com/document/d/107umKIXFw8pY-XHuiLe-WJnL7LBYFuULtmiH3weoWnQ/edit#heading=h.9s9owvuttjt).
 
-The site is mostly static, consisting of a single HTML file, a CSS stylesheet,
-a Javascript file and a handful of images.  The non-static elements of the site
-are populated by Javascript code, which pulls in the schedule of meetings and
+The site is mostly static, consisting of a single main HTML file, a CSS
+stylesheet, a Javascript file and a handful of images.  There is also an HTML
+page with information about specific recurring events and another that hosts
+the nation EVA club's waiver form.  The non-static elements of the site are
+populated by Javascript code, which pulls in the schedule of meetings and
 events from Google Calendar and recent posts on the club's [blog](https://blog.spacecoasteva.club/).
 All of this content is managed in a [repository hosted on GitHub](https://github.com/spacecoasteva/sceva-site).
 
@@ -25,13 +27,14 @@ modifications to the site and, when ready, deploying them for the world to
 see.  Details for how to get started and perform basic tasks are detailed in
 the next section.
 
-For ease of maintenance, however, the site's GitHub repository has been
+For ease of maintenance, **however**, the site's GitHub repository has been
 configured with [GitHub Actions](https://docs.github.com/actions) that automate
-updates to the Firebase site.  Changes to the site should be developed on a
-branch.  A _pull request_ to merge the branch back to the "main" branch will
-create a temporary _preview_ site - the link to which is provided in a comment
-on the pull request.  When the changes have been verified, merging the branch
-will deploy the changes to the live site.
+updates to the Firebase site, so **you can skip setting up the Firebase CLI**.
+Changes to the site should be developed on a branch.  A _pull request_ to merge
+the branch back to the "main" branch will create a temporary _preview_ site —
+the link to which is provided in a comment on the pull request.  When the
+changes have been verified, merging the branch will deploy the changes to the
+live site.
 
 ### Critical Firebase CLI links and commands
 
