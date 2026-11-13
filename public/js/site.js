@@ -48,6 +48,8 @@ function loadBlogFeed() {
     });
 }
 
+const EVENT_GRACE_HOURS = 6;
+
 function loadEvents(openModal) {
     var CAL_URL = 'calendar/v3/calendars/';
     var CAL_ID = 'spacecoasteva@gmail.com';
@@ -60,7 +62,7 @@ function loadEvents(openModal) {
         var eventsDiv = document.getElementById('events');
         var prevDiv = document.getElementById('prev-events');
         var events = JSON.parse(this.response).items;
-        var current = new Date(Date.now()).addHours(-6);
+        var current = new Date(Date.now()).addHours(-EVENT_GRACE_HOURS);
         var next_info = null;
         var rows = '';
         var prevRows = '';
@@ -132,8 +134,8 @@ function setupTemplates() {
         .addFilter('isTBD', isTBD)
         .addFilter('calendarDate', calendarDate)
         .addFilter('datetimeFormat', strftimeET)
-        .addFilter('calendarBefore', function(value, hoursOffset = 0) {
-            return calendarDate(value) < new Date().addHours(-6);
+        .addFilter('calendarBefore', function(value, hoursOffset = -EVENT_GRACE_HOURS) {
+            return calendarDate(value) < new Date().addHours(hoursOffset);
         }).addFilter('summaryVenue', function(summary) {
             return summary.indexOf('@') < 0 ? '... ' + summary : ' at ' + summary.split('@')[1].trim();
         }).addFilter('venueSubstitute', function(where, event) {

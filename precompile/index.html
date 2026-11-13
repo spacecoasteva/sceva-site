@@ -85,7 +85,7 @@
                             {{-event.location | urlencode}}">{{event.location}}<img class="map" src="img/map.png"/></a>
                     {%- endif %}
                 {%- endset -%}-->
-                <tr class="event {% if event.start | calendarBefore(-6) or (event | isTBD) %}summary{% else %}details{% endif %}">{# : -#}
+                <tr class="event {% if event.start | calendarBefore() or (event | isTBD) %}summary{% else %}details{% endif %}">{# : -#}
                     <td class="event-date" title="{{startFormat()}}">{{startFormat('%a')}} <span class="long">
                         {{-startFormat('%b&nbsp;%-d')}}</span><span class="short">{{startFormat("%-m/%-d")}}</span></td>{# : -#}
                     <td class="event-time">{{startFormat("%-I:%M")}}<span class="long">{{startFormat("&nbsp;%p")-}}
