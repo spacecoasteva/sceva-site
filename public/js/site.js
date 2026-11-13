@@ -35,9 +35,11 @@ function loadBlogFeed() {
     var BLOG_ARGS = '/posts?status=live&orderBy=published&maxResults=3&view=READER&fetchImages=true&fetchBodies=true';
     loadGoogleApi(BLOG_URL + BLOG_ID + BLOG_ARGS, function() {
         var postsDiv = document.getElementById('posts');
-        var posts = JSON.parse(this.response).items;
+        var posts = JSON.parse(this.response);
+        posts = posts && Array.isArray(posts.items) ? posts.items : [];
         postsDiv.innerHTML = nunjucks.render('blogs', { posts: posts });
-        var feature = posts.find(p => (p?.labels ?? []).includes("Feature"));
+        var feature = posts.find(p => (Array.isArray(p.labels) ? p.labels : [])
+            .find(l => l.toLowerCase() === "feature");
         if (feature) {
             var featured = document.getElementById('featured');
             featured.innerHTML = nunjucks.render('blogpost', { post: feature });
@@ -138,12 +140,12 @@ function setupTemplates() {
             var maptag = '<a title="Map" target="_blank" href="https://maps.google.com/maps?q=' +
                 encodeURIComponent(event.location) + '">';
             var mapendtag = '<img class="map" src="img/map.png"/></a>';
-            var descLoc = event.description ? event.description.match(/ *{([^@}]*)@([^}]*)}/) : [];
+            var descLoc = event.description ? event.description.match(/ *{([^@}]*)@([^}]*)}/) || [] : [];
             var venue = descLoc && descLoc[1]
                             ? (isTBD(event) ? descLoc[1] : maptag + descLoc[1] + mapendtag)
                             : (isTBD(event) ? 'TBD' : maptag + event.location.match(/[^,]*/)[0] + mapendtag);
             var city =  descLoc && descLoc[2] ? descLoc[2]
-                            : (isTBD(event) ? 'TBD' : event.location.match(/, *([^,]*), *[A-Z][A-Z]\b/)[1]);
+                            : (isTBD(event) ? 'TBD' : (event.location.match(/, *([^,]*), *[A-Z][A-Z]\b/) || ['', 'Florida'])[1]);
             return where.replace('$v', venue).replace('$c', city);
         }).addFilter('split', function(value, delim) {
             return value.split(delim);
