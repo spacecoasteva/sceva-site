@@ -14,8 +14,10 @@ function toggleDetail(e) {
     }
 }
 
+const CALENDAR_TIMEZONE = 'America/New_York';
+
 function strftimeET(value, format, offset) {
-    const dateOptions = { timeZone: 'America/New_York', timeZoneName: 'longOffset' };
+    const dateOptions = { timeZone: CALENDAR_TIMEZONE, timeZoneName: 'longOffset' };
     const [_, h, m] = value.toLocaleString('en', dateOptions).match(/([+-]\d+):(\d+)$/) || ['', '+00', '00'];
     return strftime.timezone(null != offset ? offset : h * 60 + (h > 0 ? +m : -m))(format, value);
 }
@@ -54,7 +56,7 @@ function loadEvents(openModal) {
     var CAL_URL = 'calendar/v3/calendars/';
     var CAL_ID = 'spacecoasteva@gmail.com';
     var CAL_ARGS = '/events?maxResults=20&orderBy=startTime&singleEvents=true';
-    var tz = Intl.DateTimeFormat().resolvedOptions().timeZone != 'America/New_York' ? ' ET' : '';
+    var tz = Intl.DateTimeFormat().resolvedOptions().timeZone != CALENDAR_TIMEZONE ? ' ET' : '';
     var min = '&timeMin=' + new Date(Date.now()).addDays(-182).toISOString();
     var max = '&timeMax=' + new Date(Date.now()).addDays(93).toISOString();
     var popEventId = location.search.replace(/^.*[?&]eventid=([^&]*).*/i, '$1');
@@ -137,18 +139,20 @@ function setupTemplates() {
         .addFilter('calendarBefore', function(value, hoursOffset = -EVENT_GRACE_HOURS) {
             return calendarDate(value) < new Date().addHours(hoursOffset);
         }).addFilter('summaryVenue', function(summary) {
-            return summary.indexOf('@') < 0 ? '... ' + summary : ' at ' + summary.split('@')[1].trim();
+            var s = typeof summary === 'string' ? summary.trim() : '', at = s.indexOf('@');
+            return !s ? '...' : at < 0 ? '... ' + s : ' at ' + s.slice(at + 1).trim();
         }).addFilter('venueSubstitute', function(where, event) {
+            var location = (event.location || '').trim();
             var maptag = '<a title="Map" target="_blank" href="https://maps.google.com/maps?q=' +
-                encodeURIComponent(event.location) + '">';
+                encodeURIComponent(location) + '">';
             var mapendtag = '<img class="map" src="img/map.png"/></a>';
             var descLoc = event.description ? event.description.match(/ *{([^@}]*)@([^}]*)}/) || [] : [];
             var venue = descLoc && descLoc[1]
                             ? (isTBD(event) ? descLoc[1] : maptag + descLoc[1] + mapendtag)
-                            : (isTBD(event) ? 'TBD' : maptag + event.location.match(/[^,]*/)[0] + mapendtag);
+                            : (isTBD(event) ? 'TBD' : maptag + location.match(/[^,]*/)[0] + mapendtag);
             var city =  descLoc && descLoc[2] ? descLoc[2]
-                            : (isTBD(event) ? 'TBD' : (event.location.match(/, *([^,]*), *[A-Z][A-Z]\b/) || ['', 'Florida'])[1]);
-            return where.replace('$v', venue).replace('$c', city);
+                            : (isTBD(event) ? 'TBD' : (location.match(/, *([^,]*), *[A-Z][A-Z]\b/) || ['', 'Florida'])[1]);
+            return (where || '').replace('$v', venue).replace('$c', city);
         }).addFilter('split', function(value, delim) {
             return value.split(delim);
         }).addFilter('addressSplit', function(value, delim) {
