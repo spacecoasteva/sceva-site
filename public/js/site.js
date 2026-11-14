@@ -41,7 +41,7 @@ function loadBlogFeed() {
         posts = posts && Array.isArray(posts.items) ? posts.items : [];
         postsDiv.innerHTML = nunjucks.render('blogs', { posts: posts });
         var feature = posts.find(p => (Array.isArray(p.labels) ? p.labels : [])
-            .find(l => l.toLowerCase() === "feature");
+            .find(l => l.toLowerCase() === "feature"));
         if (feature) {
             var featured = document.getElementById('featured');
             featured.innerHTML = nunjucks.render('blogpost', { post: feature });
