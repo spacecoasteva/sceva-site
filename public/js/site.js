@@ -221,7 +221,7 @@ function setupEventModal() {
         return false;
     }
     var rsvpSubmit = document.getElementById('rsvpSubmit');
-    rsvpSubmit.onclick = function() {
+    rsvpSubmit.onclick = async function() {
         if (rsvpForm['emailAddress'].value == '' &&
             scring(rsvpForm['comments'].value, 0x30) == 'SXy]@')
         {
@@ -231,20 +231,26 @@ function setupEventModal() {
         }
         if (!rsvpForm.reportValidity()) { return; }
         var result = rsvpForm['attendance'].value;
-        firebaseDb.collection('rsvps').add({
-            email: rsvpForm['emailAddress'].value,
-            eventId: rsvpForm['eventid'].value,
-            response: result,
-            people: parseInt(rsvpForm['people'].value),
-            comments: rsvpForm['comments'].value,
-            timestamp: firebaseApp.firebase.firestore.FieldValue.serverTimestamp()
-        }).then((docRef) => {
-            console.log("Document written with ID: ", docRef.id);
-        }).catch((error) => {
-            console.error("Error adding document: ", error);
+        rsvpSubmit.disabled = true;
+        try {
+            //const docRef =
+            await firebaseDb.collection('rsvps').add({
+                email: rsvpForm['emailAddress'].value,
+                eventId: rsvpForm['eventid'].value,
+                response: result,
+                people: parseInt(rsvpForm['people'].value, 10),
+                comments: rsvpForm['comments'].value,
+                timestamp: firebaseApp.firebase.firestore.FieldValue.serverTimestamp()
+            });
+            //console.log("Document written with ID: ", docRef.id);
+            // Only clear the comments after successful submission.
+            rsvpForm['comments'].value = '';
+        } catch (error) {
+            console.error("Error sending RSVP: ", error);
             result = 'Error';
-        });
-        rsvpForm['comments'].value = '';
+        } finally {
+            rsvpSubmit.disabled = false;
+        }
         hideModal(modal);
         thankYouModal.firstElementChild.className = 'modal-content result' + result;
         thankYouModal.style.display = 'block';
